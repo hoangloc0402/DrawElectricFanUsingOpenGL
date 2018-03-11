@@ -85,7 +85,7 @@ int main(int argc, CHAR* argv[]) {
 	glutInitWindowPosition(50, 50); // set window position on screen
 	glutCreateWindow("Draw Fannnnnnnnnnnnnnnnnnn"); // open the screen window
 
-	fanBlade.CreateFanBlade(2, 0.5);
+	fanBlade.CreateConical(2,3,10);
 
 	myInit();
 	glutDisplayFunc(myDisplay);

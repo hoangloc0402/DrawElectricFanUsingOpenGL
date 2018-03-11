@@ -51,9 +51,8 @@ public:
 
 	void DrawWireframe();
 	void DrawColor();
-	void CreateCube(float	fSize);
 	void CreateFanBlade(float length, float height);
-	void CreateCylinder(float radius, float height);
+	void CreateConical(float radius1, float radius2, float height);
 
 };
 

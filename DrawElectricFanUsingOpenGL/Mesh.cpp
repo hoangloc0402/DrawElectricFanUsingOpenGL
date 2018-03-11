@@ -45,13 +45,13 @@ void Mesh::DrawColor() {
 }
 
 
-void Mesh::CreateCylinder(float radius, float height) {
+void Mesh::CreateConical(float radius1, float radius2  , float height) {
 	int i;
 	numVerts = 42;
 	pt = new Point3[numVerts];
 	for (i = 0; i < 20; i++) {
-		pt[i].set(0.4 * cos(i * 18 * DEG2RAD), 0, 0.4*sin(i * 18 * DEG2RAD)); //Hình tròn dưới
-		pt[i + 20].set(0.4 * cos(i * 18 * DEG2RAD), 0.5, 0.4*sin(i * 18 * DEG2RAD)); //Hình tròn trên
+		pt[i].set(radius1 * cos(i * 18 * DEG2RAD), 0, radius1*sin(i * 18 * DEG2RAD)); //Hình tròn dưới
+		pt[i + 20].set(radius2 * cos(i * 18 * DEG2RAD), height, radius2*sin(i * 18 * DEG2RAD)); //Hình tròn trên
 	}
 
 	numFaces = 22;
