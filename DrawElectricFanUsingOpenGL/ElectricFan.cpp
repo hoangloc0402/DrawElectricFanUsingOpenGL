@@ -9,6 +9,7 @@ GLfloat angle;
 int		screenWidth = 1200;
 int		screenHeight = 600;
 const int circleCount = 40; //Số lượng vòng tròn trong lưới quạt
+int fanSpeed = 20;
 
 void drawAxis() {
 	glColor3f(0, 0, 1);
@@ -53,13 +54,14 @@ void drawEngineCover() {
 
 void drawWholeFanBlade() {
 
-	glRotatef(-angle * 20, 0, 1, 0);
+	glPushMatrix();
+	glRotatef(-angle * fanSpeed, 0, 1, 0);
 	drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
-	glRotatef(angle * 20, 0, 1, 0);
+	glPopMatrix();
 
 	Mesh pivotCover, smallPivotCover, steelPivot;
 	pivotCover.CreateConical(0.3, 0.3, 0.3, 0,0);
@@ -70,9 +72,6 @@ void drawWholeFanBlade() {
 
 	steelPivot.CreateConical(0.1, 0.1, 0.3, -0.3,1);
 	fillColorAndFrame(steelPivot);
-
-	//glLoadIdentity();
-
 }
 #pragma endregion
 
@@ -435,15 +434,12 @@ void drawFan() {
 
 
 void myDisplay() {
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gluLookAt(
 		1.5*cos(DEG2RAD*angle),	//eyeX
 		1.5*sin(DEG2RAD*angle),	//eyeY
-	
-
 		1.5,	//eyeZ
 		0.0,	//reference point X
 		0.0,	//reference point Y
@@ -460,7 +456,6 @@ void myDisplay() {
 		//1.5*cos(DEG2RAD*angle),	//eyeX
 		1.5*sin(DEG2RAD*angle),	//eyeY
 		1.5*cos(DEG2RAD*angle),
-
 		1.5,	//eyeZ
 		0.0,	//reference point X
 		0.0,	//reference point Y
@@ -490,6 +485,21 @@ void processTimer(int value) {
 	glutPostRedisplay();
 }
 
+void myKeyboard(unsigned char key, int x, int y) {
+	switch (key) {
+	case '+': 
+		fanSpeed += 2;
+		break;
+	case '-': 
+		fanSpeed -= 2;
+		break;
+	default: break;
+	}
+	if (fanSpeed > 20) fanSpeed = 20;
+	if (fanSpeed <2) fanSpeed = 2;
+	glutPostRedisplay();
+}
+
 int main(int argc, CHAR* argv[]) {
 
 
@@ -502,6 +512,7 @@ int main(int argc, CHAR* argv[]) {
 	myInit();
 	glutDisplayFunc(myDisplay);
 	glutTimerFunc(5, processTimer, 5);
+	glutKeyboardFunc(myKeyboard);
 	glutMainLoop();
 	return 0;
 }
