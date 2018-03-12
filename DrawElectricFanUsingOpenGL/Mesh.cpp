@@ -38,7 +38,7 @@ void Mesh::DrawColor() {
 			int		iv = face[f].vert[v].vertIndex;
 			int		ic = face[f].vert[v].colorIndex;
 
-			ic = f % COLORNUM;
+			//ic = f % COLORNUM;
 
 			glColor3f(ColorArr[ic][0], ColorArr[ic][1], ColorArr[ic][2]);
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
@@ -185,7 +185,7 @@ void Mesh::CreateFanBlade(float length, float height) {
 	face[0].vert[1].vertIndex = 5;
 	face[0].vert[0].vertIndex = 6;
 	for (int j = 0; j < face[0].nVerts; j++)
-		face[0].vert[j].colorIndex = 1;
+		face[0].vert[j].colorIndex = 9 - j - 1;
 
 
 	face[1].nVerts = 9;
@@ -200,7 +200,7 @@ void Mesh::CreateFanBlade(float length, float height) {
 	face[1].vert[7].vertIndex = 12;
 	face[1].vert[8].vertIndex = 13;
 	for (int j = 0; j < face[1].nVerts; j++)
-		face[1].vert[j].colorIndex = 1;
+		face[1].vert[j].colorIndex = j + 9;
 
 	face[2].nVerts = 3;
 	face[2].vert = new VertexID[face[2].nVerts];
@@ -208,7 +208,7 @@ void Mesh::CreateFanBlade(float length, float height) {
 	face[2].vert[1].vertIndex = 0;
 	face[2].vert[2].vertIndex = 7;
 	for (int j = 0; j < face[2].nVerts; j++)
-		face[2].vert[j].colorIndex = 1;
+		face[2].vert[j].colorIndex = 18;
 
 	face[3].nVerts = 3;
 	face[3].vert = new VertexID[face[3].nVerts];
@@ -216,7 +216,7 @@ void Mesh::CreateFanBlade(float length, float height) {
 	face[3].vert[1].vertIndex = 6;
 	face[3].vert[2].vertIndex = 13;
 	for (int j = 0; j < face[3].nVerts; j++)
-		face[3].vert[j].colorIndex = 1;
+		face[3].vert[j].colorIndex = 18;
 
 	for (i = 4; i < numFaces; i++) {
 		face[i].nVerts = 4;
@@ -226,80 +226,80 @@ void Mesh::CreateFanBlade(float length, float height) {
 		face[i].vert[2].vertIndex = (i - 4) + 8;
 		face[i].vert[3].vertIndex = (i - 4) + 7;
 		for (int j = 0; j < face[i].nVerts; j++)
-			face[i].vert[j].colorIndex = 1;
+			face[i].vert[j].colorIndex = 18;
 	}
 }
 
 void Mesh::CreateOval(float radius1, float radius2, float radius3, float heightBot, float heightUp, float length, float delta) {
-		int i;
-		numVerts = 42;
-		pt = new Point3[numVerts];
-		float halfLength = length / 2;
-		for (i = 0; i < 10; i++) {
-			pt[i].set(radius1 * cos(i * 20 * DEG2RAD), heightBot, radius1*sin(i * 20 * DEG2RAD) + length); //Hình tròn dưới
-			pt[i + 20].set(radius1 * cos(i * 20 * DEG2RAD), heightUp, radius3*sin(i * 20 * DEG2RAD) + length); //Hình tròn trên
+	int i;
+	numVerts = 42;
+	pt = new Point3[numVerts];
+	float halfLength = length / 2;
+	for (i = 0; i < 10; i++) {
+		pt[i].set(radius1 * cos(i * 20 * DEG2RAD), heightBot, radius1*sin(i * 20 * DEG2RAD) + length); //Hình tròn dưới
+		pt[i + 20].set(radius1 * cos(i * 20 * DEG2RAD), heightUp, radius3*sin(i * 20 * DEG2RAD) + length); //Hình tròn trên
 
-			pt[i + 10].set(radius2 * cos((i * 20 + 180)* DEG2RAD), heightBot, radius2*sin((i * 20 + 180) * DEG2RAD) - 0.1); //Hình tròn dưới
-			pt[i + 30].set(radius2 * cos((i * 20 + 180) * DEG2RAD), heightUp + delta, radius2*sin((i * 20 + 180) * DEG2RAD) - 0.1); //Hình tròn trên
-		}
-
-		numFaces = 22;
-		face = new Face[numFaces];
-
-		face[20].nVerts = 20;
-		face[20].vert = new VertexID[face[20].nVerts];
-		face[21].nVerts = 20;
-		face[21].vert = new VertexID[face[21].nVerts];
-		for (i = 0; i < 20; i++) {
-			face[20].vert[i].vertIndex = i;
-			face[20].vert[i].colorIndex = 1;
-			face[21].vert[i].vertIndex = i + 20;
-			face[21].vert[i].colorIndex = 1;
-		}
-		for (i = 0; i < 20; i++) {
-			face[i].nVerts = 4;
-			face[i].vert = new VertexID[face[i].nVerts];
-			face[i].vert[0].vertIndex = (i + 1) % 20;
-			face[i].vert[1].vertIndex = i;
-			face[i].vert[2].vertIndex = i + 20;
-			face[i].vert[3].vertIndex = (i + 1) % 20 + 20;
-			for (int j = 0; j<face[i].nVerts; j++)
-				face[i].vert[j].colorIndex = 1;
-		}
-
+		pt[i + 10].set(radius2 * cos((i * 20 + 180)* DEG2RAD), heightBot, radius2*sin((i * 20 + 180) * DEG2RAD) - 0.1); //Hình tròn dưới
+		pt[i + 30].set(radius2 * cos((i * 20 + 180) * DEG2RAD), heightUp + delta, radius2*sin((i * 20 + 180) * DEG2RAD) - 0.1); //Hình tròn trên
 	}
 
+	numFaces = 22;
+	face = new Face[numFaces];
+
+	face[20].nVerts = 20;
+	face[20].vert = new VertexID[face[20].nVerts];
+	face[21].nVerts = 20;
+	face[21].vert = new VertexID[face[21].nVerts];
+	for (i = 0; i < 20; i++) {
+		face[20].vert[i].vertIndex = i;
+		face[20].vert[i].colorIndex = 1;
+		face[21].vert[i].vertIndex = i + 20;
+		face[21].vert[i].colorIndex = 1;
+	}
+	for (i = 0; i < 20; i++) {
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = (i + 1) % 20;
+		face[i].vert[1].vertIndex = i;
+		face[i].vert[2].vertIndex = i + 20;
+		face[i].vert[3].vertIndex = (i + 1) % 20 + 20;
+		for (int j = 0; j<face[i].nVerts; j++)
+			face[i].vert[j].colorIndex = 1;
+	}
+
+}
+
 void Mesh::CreateFanNeck(float radius1, float radius2, float heightBot, float heightUp, float oldDelta, float newDelta) {
-		int i;
-		numVerts = 42;
-		pt = new Point3[numVerts];
-		for (i = 0; i < 20; i++) {
-			pt[i].set(radius1 * cos(i * 18 * DEG2RAD), heightBot, radius1*sin(i * 18 * DEG2RAD) - oldDelta); //Hình tròn dưới
-			pt[i + 20].set(radius2 * cos(i * 18 * DEG2RAD), heightUp, radius2*sin(i * 18 * DEG2RAD) - newDelta); //Hình tròn trên
-		}
+	int i;
+	numVerts = 42;
+	pt = new Point3[numVerts];
+	for (i = 0; i < 20; i++) {
+		pt[i].set(radius1 * cos(i * 18 * DEG2RAD), heightBot, radius1*sin(i * 18 * DEG2RAD) - oldDelta); //Hình tròn dưới
+		pt[i + 20].set(radius2 * cos(i * 18 * DEG2RAD), heightUp, radius2*sin(i * 18 * DEG2RAD) - newDelta); //Hình tròn trên
+	}
 
-		numFaces = 22;
-		face = new Face[numFaces];
+	numFaces = 22;
+	face = new Face[numFaces];
 
-		face[20].nVerts = 20;
-		face[20].vert = new VertexID[face[20].nVerts];
-		face[21].nVerts = 20;
-		face[21].vert = new VertexID[face[21].nVerts];
-		for (i = 0; i < 20; i++) {
-			face[20].vert[i].vertIndex = i;
-			face[20].vert[i].colorIndex = 1;
-			face[21].vert[i].vertIndex = i + 20;
-			face[21].vert[i].colorIndex = 1;
-		}
-		for (i = 0; i < 20; i++) {
-			face[i].nVerts = 4;
-			face[i].vert = new VertexID[face[i].nVerts];
-			face[i].vert[0].vertIndex = (i + 1) % 20;
-			face[i].vert[1].vertIndex = i;
-			face[i].vert[2].vertIndex = i + 20;
-			face[i].vert[3].vertIndex = (i + 1) % 20 + 20;
-			for (int j = 0; j<face[i].nVerts; j++)
-				face[i].vert[j].colorIndex = 1;
-		}
+	face[20].nVerts = 20;
+	face[20].vert = new VertexID[face[20].nVerts];
+	face[21].nVerts = 20;
+	face[21].vert = new VertexID[face[21].nVerts];
+	for (i = 0; i < 20; i++) {
+		face[20].vert[i].vertIndex = i;
+		face[20].vert[i].colorIndex = 1;
+		face[21].vert[i].vertIndex = i + 20;
+		face[21].vert[i].colorIndex = 1;
+	}
+	for (i = 0; i < 20; i++) {
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = (i + 1) % 20;
+		face[i].vert[1].vertIndex = i;
+		face[i].vert[2].vertIndex = i + 20;
+		face[i].vert[3].vertIndex = (i + 1) % 20 + 20;
+		for (int j = 0; j<face[i].nVerts; j++)
+			face[i].vert[j].colorIndex = 1;
+	}
 
 }
