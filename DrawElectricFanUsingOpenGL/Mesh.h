@@ -52,8 +52,9 @@ public:
 	void DrawWireframe();
 	void DrawColor();
 	void CreateFanBlade(float length, float height);
-	void CreateConical(float radius1, float radius2, float height, float y);
-
+	void CreateConical(float radius1, float radius2, float height, float y, int color);
+	void CreateOval(float radius1, float radius2, float radius3, float heightBot, float heightUp, float length, float delta);
+	void CreateFanNeck(float radius1, float radius2, float heightBot, float heightUp, float oldDelta, float newDelta);
 };
 
 #endif

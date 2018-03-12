@@ -15,15 +15,15 @@ void drawAxis() {
 	glBegin(GL_LINES);
 	glVertex3f(0, 0, 0);
 	glVertex3f(40, 0, 0);
-
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 40, 0);
-
 	glVertex3f(0, 0, 0);
 	glVertex3f(0, 0, 40);
 	glEnd();
 }
 
+
+#pragma region FanBladeAndEngine
 void fillColorAndFrame(Mesh &m) {
 	m.DrawColor();
 	//m.DrawWireframe();
@@ -38,11 +38,11 @@ void drawOneBlade() {
 void drawEngineCover() {
 	Mesh engineCoverPart1, engineCoverPart2, engineCoverPart3, engineCoverPart4, engineCoverPart5;
 
-	engineCoverPart1.CreateConical(0.4, 0.35, 0.1, -0.1);
-	engineCoverPart2.CreateConical(0.45, 0.4, 0.2, -0.3);
-	engineCoverPart3.CreateConical(0.45, 0.45, 0.4, -0.7);
-	engineCoverPart4.CreateConical(0.4, 0.45, 0.2, -0.9);
-	engineCoverPart5.CreateConical(0.35, 0.4, 0.1, -1);
+	engineCoverPart1.CreateConical(0.4, 0.35, 0.1, -0.1,2);
+	engineCoverPart2.CreateConical(0.45, 0.4, 0.2, -0.3,2);
+	engineCoverPart3.CreateConical(0.45, 0.45, 0.4, -0.7,2);
+	engineCoverPart4.CreateConical(0.4, 0.45, 0.2, -0.9,2);
+	engineCoverPart5.CreateConical(0.35, 0.4, 0.1, -1,2);
 
 	fillColorAndFrame(engineCoverPart1);
 	fillColorAndFrame(engineCoverPart2);
@@ -52,31 +52,191 @@ void drawEngineCover() {
 }
 
 void drawWholeFanBlade() {
-	glViewport(0, 0, screenWidth/2, screenHeight);
-	glColor3f(0, 0, 0);
 
-	glRotatef(-angle*20, 0, 1, 0);
+	glRotatef(-angle * 20, 0, 1, 0);
 	drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
 	glRotatef(72, 0, 1, 0); drawOneBlade();
-	glRotatef(angle *20, 0, 1, 0);
+	glRotatef(angle * 20, 0, 1, 0);
 
 	Mesh pivotCover, smallPivotCover, steelPivot;
-	pivotCover.CreateConical(0.3, 0.3, 0.3,0);
+	pivotCover.CreateConical(0.3, 0.3, 0.3, 0,0);
 	fillColorAndFrame(pivotCover);
 
-	smallPivotCover.CreateConical(0.25, 0.2, 0.15,0.3);
+	smallPivotCover.CreateConical(0.25, 0.2, 0.15, 0.3,0);
 	fillColorAndFrame(smallPivotCover);
 
-	steelPivot.CreateConical(0.1, 0.1, 0.3, -0.3);
+	steelPivot.CreateConical(0.1, 0.1, 0.3, -0.3,1);
 	fillColorAndFrame(steelPivot);
 
 	//glLoadIdentity();
 
 }
+#pragma endregion
 
+
+#pragma region FanBody
+void drawSwitch(float heightBot) {
+	Mesh fanSwitchP1;
+	Mesh fanSwitchP2;
+	Mesh fanSwitchP3;
+	Mesh fanSwitchP4;
+	Mesh fanSwitchP5;
+
+	glTranslatef(0, 0, 1);
+
+	fanSwitchP1.CreateConical(0.4, 0.4, 0.1, heightBot, 1);
+	fanSwitchP2.CreateOval(0.1, 0.1, 0.1, heightBot + 0.1, heightBot + 0.11, 0.35, 0);
+	fanSwitchP3.CreateOval(0.09, 0.09, 0.09, heightBot + 0.11, heightBot + 0.12, 0.35, 0);
+	fanSwitchP4.CreateOval(0.08, 0.08, 0.08, heightBot + 0.12, heightBot + 0.13, 0.35, 0);
+	fanSwitchP5.CreateOval(0.07, 0.07, 0.07, heightBot + 0.13, heightBot + 0.15, 0.35, 0);
+
+
+	/*fanSwitchP1.DrawWireframe();
+	fanSwitchP2.DrawWireframe();
+	fanSwitchP3.DrawWireframe();
+	fanSwitchP4.DrawWireframe();
+	fanSwitchP5.DrawWireframe();*/
+
+	fanSwitchP1.DrawColor();
+	fanSwitchP2.DrawColor();
+	fanSwitchP3.DrawColor();
+	fanSwitchP4.DrawColor();
+	fanSwitchP5.DrawColor();
+
+	glTranslatef(0, 0, -1);
+}
+
+void drawContractor() {
+	Mesh fanContractor;
+
+
+	glTranslatef(0.1, 1.6, -0.75);
+
+	glRotatef(30, 1, 0, 0);
+
+	glRotatef(90, 0, 0, 1);
+
+
+
+	fanContractor.CreateOval(0.2, 0.2, 0.2, 0, 0.2, 0.15, 0);
+
+	//fanContractor.DrawWireframe();
+
+	fanContractor.DrawColor();
+
+
+	glRotatef(-90, 0, 0, -1);
+	glRotatef(-30, -1, 0, 0);
+	glTranslatef(0.1, 1.6, 0.75);
+
+}
+
+void drawRopes(float length, float posX, float posZ) {
+	Mesh fanRopesP1;
+	Mesh fanRopesP2;
+	Mesh fanRopesP3;
+	Mesh fanRopesP4;
+	Mesh fanRopesP5;
+
+	glTranslatef(-posX, 0, posZ);
+
+	glRotatef(-90, 1, 0, 0);
+
+	fanRopesP1.CreateConical(0.08, 0.06, 0.1, 0,1);
+	fanRopesP2.CreateConical(0.06, 0.04, 0.2, 0.1,1);
+	fanRopesP3.CreateConical(0.04, 0.02, 0.3, 0.2,1);
+	fanRopesP4.CreateConical(0.02, 0.01, 0.4, 0.3,1);
+	fanRopesP5.CreateConical(0.01, 0.01, length, 0.4,1);
+
+	/*fanRopesP1.DrawWireframe();
+	fanRopesP2.DrawWireframe();
+	fanRopesP3.DrawWireframe();
+	fanRopesP4.DrawWireframe();
+	fanRopesP5.DrawWireframe();*/
+
+	fanRopesP1.DrawColor();
+	fanRopesP2.DrawColor();
+	fanRopesP3.DrawColor();
+	fanRopesP4.DrawColor();
+	fanRopesP5.DrawColor();
+
+
+
+	glRotatef(-90, -1, 0, 0);
+	glTranslatef(posX, 0, -posZ);
+
+}
+
+void drawFanBase(float oriHeight) {
+	Mesh	fanBaseP1;
+	Mesh	fanBaseP2;
+	Mesh	fanBaseP3;
+	Mesh	fanBaseP4;
+	Mesh	fanBaseP5;
+
+	fanBaseP1.CreateOval(0.8, 0.6, 0.8, 0, oriHeight, 1.5, 0.2);
+	fanBaseP2.CreateOval(0.78, 0.58, 0.78, oriHeight, oriHeight + 0.02, 1.5, 0.2);
+	fanBaseP3.CreateOval(0.76, 0.56, 0.76, oriHeight + 0.02, oriHeight + 0.04, 1.5, 0.2);
+	fanBaseP4.CreateOval(0.74, 0.54, 0.74, oriHeight + 0.04, oriHeight + 0.06, 1.5, 0.2);
+	fanBaseP5.CreateOval(0.72, 0.52, 0.72, oriHeight + 0.06, oriHeight + 0.08, 1.5, 0.2);
+
+
+	/*fanBaseP1.DrawWireframe();
+	fanBaseP2.DrawWireframe();
+	fanBaseP3.DrawWireframe();
+	fanBaseP4.DrawWireframe();
+	fanBaseP5.DrawWireframe();*/
+
+	fanBaseP1.DrawColor();
+	fanBaseP2.DrawColor();
+	fanBaseP3.DrawColor();
+	fanBaseP4.DrawColor();
+	fanBaseP5.DrawColor();
+
+}
+
+void drawFanNeck(float oriHeight) {
+	Mesh	fanNeckP1;
+	Mesh	fanNeckP2;
+	Mesh	fanNeckP3;
+	Mesh	fanNeckP4;
+	Mesh	fanNeckP5;
+
+	fanNeckP1.CreateFanNeck(0.36, 0.34, oriHeight, oriHeight + 0.1, 0, 0.1);
+	fanNeckP2.CreateFanNeck(0.34, 0.32, oriHeight + 0.1, oriHeight + 0.2, 0.1, 0.15);
+	fanNeckP3.CreateFanNeck(0.32, 0.30, oriHeight + 0.2, oriHeight + 0.3, 0.15, 0.2);
+	fanNeckP4.CreateFanNeck(0.30, 0.28, oriHeight + 0.3, oriHeight + 0.5, 0.2, 0.3);
+	fanNeckP5.CreateFanNeck(0.28, 0.25, oriHeight + 0.5, oriHeight + 1, 0.3, 0.6);
+
+	/*fanNeckP1.DrawWireframe();
+	fanNeckP2.DrawWireframe();
+	fanNeckP3.DrawWireframe();
+	fanNeckP4.DrawWireframe();
+	fanNeckP5.DrawWireframe();*/
+
+	fanNeckP1.DrawColor();
+	fanNeckP2.DrawColor();
+	fanNeckP3.DrawColor();
+	fanNeckP4.DrawColor();
+	fanNeckP5.DrawColor();
+}
+
+void drawFanBody() {
+	float oriHeight = 0.22;
+	drawFanBase(oriHeight);
+	drawFanNeck(oriHeight + 0.28);
+	drawSwitch(0.3);
+	drawContractor();
+	drawRopes(1.5, 0.15, 3.2);
+	drawRopes(2, -0.15, 3.7);
+}
+#pragma endregion
+
+
+#pragma region FanDome
 void drawDomeLine(float arr[circleCount][2], float low, float high, int section, float innerRadius, float outterRadius) {
 	glBegin(GL_LINES);
 	for (int i = 0; i < circleCount; i++) {
@@ -229,23 +389,28 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 	}
 	glEnd();
 }
+#pragma endregion
 
 
 void drawFan() {
 	drawAxis();
+	glViewport(0, 0, screenWidth/2, screenHeight);
 
+	//glRotatef(45, 1, 0, 0);
 
-	glRotatef(45, 1, 0, 0);
+	//if (angle <=180) 
+	//	glRotatef(angle-90, 0, 1, 0);
+	//else 
+	//	glRotatef(-angle-90, 0, 1, 0);
 
-	if (angle <=180) 
-		glRotatef(angle-90, 0, 1, 0);
-	else 
-		glRotatef(-angle-90, 0, 1, 0);
+	//glTranslatef(0, 2, 0);
+	//glRotatef(90, 1, 0, 0);
+	//glTranslatef(0, 1, 0);
 
-	glTranslatef(0, 2, 0);
-	glRotatef(90, 1, 0, 0);
-	glTranslatef(0, 1, 0);
+	drawFanBody();
 
+	glTranslatef(0.1, -2.4, -1);
+	glRotatef(180, 1,0, 0);
 	drawWholeFanBlade(); //Vẽ toàn bộ 5 cánh quạt và trục
 	glTranslatef(0, -0.3, 0);
 	drawEngineCover(); //Vẽ hộp động cơ
@@ -253,6 +418,8 @@ void drawFan() {
 	drawDomeRear(2.8, 0.4, 0.1); //Vẽ phần lưới quạt phía sau
 	glTranslatef(0, 0.5, 0);
 	drawDomeFront(2.8, 0.6); //Vẽ phần lưới quạt phía trước
+
+	
 }
 
 
@@ -273,9 +440,9 @@ void myDisplay() {
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gluLookAt(
-		//1.5*cos(DEG2RAD*angle),	//eyeX
-		1.5,	//eyeY
-		1.5,
+		1.5*cos(DEG2RAD*angle),	//eyeX
+		1.5*sin(DEG2RAD*angle),	//eyeY
+	
 
 		1.5,	//eyeZ
 		0.0,	//reference point X
