@@ -234,7 +234,17 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 void drawFan() {
 	drawAxis();
 
-	glRotatef(45, 0, 0, 1);
+
+	glRotatef(45, 1, 0, 0);
+
+	if (angle <=180) 
+		glRotatef(angle-90, 0, 1, 0);
+	else 
+		glRotatef(-angle-90, 0, 1, 0);
+
+	glTranslatef(0, 2, 0);
+	glRotatef(90, 1, 0, 0);
+	glTranslatef(0, 1, 0);
 
 	drawWholeFanBlade(); //Vẽ toàn bộ 5 cánh quạt và trục
 	glTranslatef(0, -0.3, 0);
@@ -264,8 +274,8 @@ void myDisplay() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gluLookAt(
 		//1.5*cos(DEG2RAD*angle),	//eyeX
-		1.5*sin(DEG2RAD*angle),	//eyeY
-		1.5*cos(DEG2RAD*angle),
+		1.5,	//eyeY
+		1.5,
 
 		1.5,	//eyeZ
 		0.0,	//reference point X
@@ -303,13 +313,13 @@ void myInit() {
 	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-fHalfSize, fHalfSize, -fHalfSize, fHalfSize, -1000, 1000);
+	glOrtho(-fHalfSize * 2, fHalfSize * 2, -fHalfSize * 2, fHalfSize * 2, -1000 * 2, 1000 * 2);
 }
 
 void processTimer(int value) {
 	angle += (GLfloat)value / 5;
 	if (angle > 360.0f) angle -= 360.0f;
-	glutTimerFunc(100, processTimer, value);
+	glutTimerFunc(25, processTimer, value);
 	glutPostRedisplay();
 }
 
