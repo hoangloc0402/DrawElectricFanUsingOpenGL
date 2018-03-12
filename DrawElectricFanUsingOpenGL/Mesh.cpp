@@ -44,14 +44,13 @@ void Mesh::DrawColor() {
 	}
 }
 
-
-void Mesh::CreateConical(float radius1, float radius2  , float height) {
+void Mesh::CreateConical(float radius1, float radius2  , float height, float y) {
 	int i;
 	numVerts = 42;
 	pt = new Point3[numVerts];
 	for (i = 0; i < 20; i++) {
-		pt[i].set(radius1 * cos(i * 18 * DEG2RAD), 0, radius1*sin(i * 18 * DEG2RAD)); //Hình tròn dưới
-		pt[i + 20].set(radius2 * cos(i * 18 * DEG2RAD), height, radius2*sin(i * 18 * DEG2RAD)); //Hình tròn trên
+		pt[i].set(radius1 * cos(i * 18 * DEG2RAD), y, radius1*sin(i * 18 * DEG2RAD)); //Hình tròn dưới
+		pt[i + 20].set(radius2 * cos(i * 18 * DEG2RAD), y + height, radius2*sin(i * 18 * DEG2RAD)); //Hình tròn trên
 	}
 
 	numFaces = 22;
@@ -77,6 +76,8 @@ void Mesh::CreateConical(float radius1, float radius2  , float height) {
 		for (int j = 0; j<face[i].nVerts; j++)
 			face[i].vert[j].colorIndex = 1;
 	}
+
+	
 }
 
 void Mesh::CreateFanBlade(float length, float height) {

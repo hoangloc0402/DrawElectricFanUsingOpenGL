@@ -52,7 +52,7 @@ public:
 	void DrawWireframe();
 	void DrawColor();
 	void CreateFanBlade(float length, float height);
-	void CreateConical(float radius1, float radius2, float height);
+	void CreateConical(float radius1, float radius2, float height, float y);
 
 };
 
