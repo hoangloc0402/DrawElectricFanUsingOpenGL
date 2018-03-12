@@ -1,4 +1,4 @@
-#include <math.h>
+﻿#include <math.h>
 #include <iostream>
 #include "supportClass.h"
 #include "Mesh.h"
@@ -8,28 +8,28 @@ using namespace std;
 GLfloat angle;
 int		screenWidth = 1200;
 int		screenHeight = 600;
-const int circleCount = 20;
+const int circleCount = 40; //Số lượng vòng tròn trong lưới quạt
 
-//void drawAxis() {
-//	glColor3f(0, 0, 1);
-//	glBegin(GL_LINES);
-//	glVertex3f(0, 0, 0);
-//	glVertex3f(40, 0, 0);
-//
-//	glVertex3f(0, 0, 0);
-//	glVertex3f(0, 40, 0);
-//
-//	glVertex3f(0, 0, 0);
-//	glVertex3f(0, 0, 40);
-//	glEnd();
-//}
+void drawAxis() {
+	glColor3f(0, 0, 1);
+	glBegin(GL_LINES);
+	glVertex3f(0, 0, 0);
+	glVertex3f(40, 0, 0);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 40, 0);
+
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, 40);
+	glEnd();
+}
 
 void fillColorAndFrame(Mesh &m) {
 	m.DrawColor();
 	//m.DrawWireframe();
 }
 
-void drawBlade() {
+void drawOneBlade() {
 	Mesh blade;
 	blade.CreateFanBlade(2, 0.3);
 	fillColorAndFrame(blade);
@@ -49,28 +49,26 @@ void drawEngineCover() {
 	fillColorAndFrame(engineCoverPart3);
 	fillColorAndFrame(engineCoverPart4);
 	fillColorAndFrame(engineCoverPart5);
-
 }
 
 void drawWholeFanBlade() {
 	glViewport(0, 0, screenWidth/2, screenHeight);
-	//drawAxis();
 	glColor3f(0, 0, 0);
 
 	glRotatef(-angle*20, 0, 1, 0);
-	drawBlade();
-	glRotatef(72, 0, 1, 0); drawBlade();
-	glRotatef(72, 0, 1, 0); drawBlade();
-	glRotatef(72, 0, 1, 0); drawBlade();
-	glRotatef(72, 0, 1, 0); drawBlade();
+	drawOneBlade();
+	glRotatef(72, 0, 1, 0); drawOneBlade();
+	glRotatef(72, 0, 1, 0); drawOneBlade();
+	glRotatef(72, 0, 1, 0); drawOneBlade();
+	glRotatef(72, 0, 1, 0); drawOneBlade();
 	glRotatef(angle *20, 0, 1, 0);
 
-	Mesh pivot, smallPivot, steelPivot, engineCoverPart1, engineCoverPart2, engineCoverPart3, engineCoverPart4;
-	pivot.CreateConical(0.3, 0.3, 0.3,0);
-	fillColorAndFrame(pivot);
+	Mesh pivotCover, smallPivotCover, steelPivot;
+	pivotCover.CreateConical(0.3, 0.3, 0.3,0);
+	fillColorAndFrame(pivotCover);
 
-	smallPivot.CreateConical(0.25, 0.2, 0.15,0.3);
-	fillColorAndFrame(smallPivot);
+	smallPivotCover.CreateConical(0.25, 0.2, 0.15,0.3);
+	fillColorAndFrame(smallPivotCover);
 
 	steelPivot.CreateConical(0.1, 0.1, 0.3, -0.3);
 	fillColorAndFrame(steelPivot);
@@ -234,16 +232,17 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 
 
 void drawFan() {
-	//glTranslatef(0, 1, 0);
-	//glRotatef(90, 1, 0, 0);
-	//glTranslatef(0, 1, 0);
-	drawWholeFanBlade();
+	drawAxis();
+
+	glRotatef(45, 0, 0, 1);
+
+	drawWholeFanBlade(); //Vẽ toàn bộ 5 cánh quạt và trục
 	glTranslatef(0, -0.3, 0);
-	drawEngineCover();
+	drawEngineCover(); //Vẽ hộp động cơ
 	
-	drawDomeRear(2.8, 0.4, 0.1);
+	drawDomeRear(2.8, 0.4, 0.1); //Vẽ phần lưới quạt phía sau
 	glTranslatef(0, 0.5, 0);
-	drawDomeFront(2.8, 0.6);
+	drawDomeFront(2.8, 0.6); //Vẽ phần lưới quạt phía trước
 }
 
 
@@ -262,6 +261,7 @@ void myDisplay() {
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	gluLookAt(
 		//1.5*cos(DEG2RAD*angle),	//eyeX
 		1.5*sin(DEG2RAD*angle),	//eyeY
@@ -275,10 +275,23 @@ void myDisplay() {
 		1.0,	//up vector Y
 		0.0		//up vector Z
 	);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	drawFan();
 
+	glLoadIdentity();
+	gluLookAt(
+		//1.5*cos(DEG2RAD*angle),	//eyeX
+		1.5*sin(DEG2RAD*angle),	//eyeY
+		1.5*cos(DEG2RAD*angle),
+
+		1.5,	//eyeZ
+		0.0,	//reference point X
+		0.0,	//reference point Y
+		0.0,	//reference point Z
+		0.0,	//up vector X
+		1.0,	//up vector Y
+		0.0		//up vector Z
+	);
 	glFlush();
 	glutSwapBuffers();
 }

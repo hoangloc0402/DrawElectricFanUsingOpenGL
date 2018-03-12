@@ -14,7 +14,6 @@ float	ColorArr[COLORNUM][3] = { { 1.0, 0.0, 0.0 },{ 0.0, 1.0, 0.0 },{ 0.0,  0.0,
 { 1.0, 0.5, 0.3 },{ 0.9, 1.0, 0.3 },{ 0.8, 0.5, 0.7 } };
 
 
-
 void Mesh::DrawWireframe() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	for (int f = 0; f < numFaces; f++) {
@@ -99,7 +98,7 @@ void Mesh::CreateFanBlade(float length, float height) {
 	pt[15].set(0, height, 0);
 
 
-	numFaces = 4;
+	numFaces = 10;
 	face = new Face[numFaces];
 
 	face[0].nVerts = 9;
@@ -146,4 +145,15 @@ void Mesh::CreateFanBlade(float length, float height) {
 	face[3].vert[2].vertIndex = 13;
 	for (int j = 0; j<face[3].nVerts; j++)
 		face[3].vert[j].colorIndex = 1;
+
+	for (i = 4; i < numFaces; i++) {
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = (i - 4);
+		face[i].vert[1].vertIndex = (i - 4) + 1;
+		face[i].vert[2].vertIndex = (i - 4) + 8;
+		face[i].vert[3].vertIndex = (i - 4) + 7;
+		for (int j = 0; j < face[i].nVerts; j++)
+			face[i].vert[j].colorIndex = 1;
+	}
 }
