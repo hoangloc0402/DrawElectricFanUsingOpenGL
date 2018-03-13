@@ -8,7 +8,7 @@ using namespace std;
 GLfloat angle;
 int		screenWidth = 1200;
 int		screenHeight = 600;
-const int circleCount = 40; //Số lượng vòng tròn trong lưới quạt
+const int circleCount = 100; //Số lượng vòng tròn trong lưới quạt
 float eyeX, eyeY, eyeZ, upX, upY, upZ, centerX, centerY, centerZ;
 float Radius = 4;
 float alpha = 45;
@@ -61,10 +61,11 @@ void drawWholeFanBlade() {
 	glPushMatrix();
 	glRotatef(-angle * fanSpeed, 0, 1, 0);
 	drawOneBlade();
-	glRotatef(72, 0, 1, 0); drawOneBlade();
-	glRotatef(72, 0, 1, 0); drawOneBlade();
-	glRotatef(72, 0, 1, 0); drawOneBlade();
-	glRotatef(72, 0, 1, 0); drawOneBlade();
+	glRotatef(60, 0, 1, 0); drawOneBlade();
+	glRotatef(60, 0, 1, 0); drawOneBlade();
+	glRotatef(60, 0, 1, 0); drawOneBlade();
+	glRotatef(60, 0, 1, 0); drawOneBlade();
+	glRotatef(60, 0, 1, 0); drawOneBlade();
 	glPopMatrix();
 
 	Mesh pivotCover, smallPivotCover, steelPivot;
@@ -91,10 +92,10 @@ void drawSwitch(float heightBot) {
 	glTranslatef(0, 0, 1);
 
 	fanSwitchP1.CreateConical(0.4, 0.4, 0.1, heightBot, 1);
-	fanSwitchP2.CreateOval(0.1, 0.1, 0.1, heightBot + 0.1, heightBot + 0.11, 0.25, 0);
-	fanSwitchP3.CreateOval(0.09, 0.09, 0.09, heightBot + 0.11, heightBot + 0.12, 0.25, 0);
-	fanSwitchP4.CreateOval(0.08, 0.08, 0.08, heightBot + 0.12, heightBot + 0.13, 0.25, 0);
-	fanSwitchP5.CreateOval(0.07, 0.07, 0.07, heightBot + 0.13, heightBot + 0.15, 0.25, 0);
+	fanSwitchP2.CreateOval(0.1, 0.1, 0.1, heightBot + 0.1, heightBot + 0.11, 0.25, 0, 6);
+	fanSwitchP3.CreateOval(0.09, 0.09, 0.09, heightBot + 0.11, heightBot + 0.12, 0.25, 0, 6);
+	fanSwitchP4.CreateOval(0.08, 0.08, 0.08, heightBot + 0.12, heightBot + 0.13, 0.25, 0, 6);
+	fanSwitchP5.CreateOval(0.07, 0.07, 0.07, heightBot + 0.13, heightBot + 0.15, 0.25, 0, 6);
 
 
 	/*fanSwitchP1.DrawWireframe();
@@ -124,7 +125,7 @@ void drawContractor() {
 
 
 
-	fanContractor.CreateOval(0.2, 0.2, 0.2, 0, 0.2, 0.15, 0);
+	fanContractor.CreateOval(0.2, 0.2, 0.2, 0, 0.2, 0.15, 0, 0);
 
 	//fanContractor.DrawWireframe();
 
@@ -170,7 +171,6 @@ void drawRopes(float length, float posX, float posZ) {
 
 	glRotatef(-90, -1, 0, 0);
 	glTranslatef(posX, 0.15, -posZ);
-
 }
 
 void drawFanBase(float oriHeight) {
@@ -180,11 +180,11 @@ void drawFanBase(float oriHeight) {
 	Mesh	fanBaseP4;
 	Mesh	fanBaseP5;
 
-	fanBaseP1.CreateOval(0.8, 0.6, 0.8, 0, oriHeight, 1.5, 0.2);
-	fanBaseP2.CreateOval(0.78, 0.58, 0.78, oriHeight, oriHeight + 0.02, 1.5, 0.2);
-	fanBaseP3.CreateOval(0.76, 0.56, 0.76, oriHeight + 0.02, oriHeight + 0.04, 1.5, 0.2);
-	fanBaseP4.CreateOval(0.74, 0.54, 0.74, oriHeight + 0.04, oriHeight + 0.06, 1.5, 0.2);
-	fanBaseP5.CreateOval(0.72, 0.52, 0.72, oriHeight + 0.06, oriHeight + 0.08, 1.5, 0.2);
+	fanBaseP1.CreateOval(0.8, 0.6, 0.8, 0, oriHeight, 1.5, 0.2, 1);
+	fanBaseP2.CreateOval(0.78, 0.58, 0.78, oriHeight, oriHeight + 0.02, 1.5, 0.2, 2);
+	fanBaseP3.CreateOval(0.76, 0.56, 0.76, oriHeight + 0.02, oriHeight + 0.04, 1.5, 0.2, 3 );
+	fanBaseP4.CreateOval(0.74, 0.54, 0.74, oriHeight + 0.04, oriHeight + 0.06, 1.5, 0.2, 4);
+	fanBaseP5.CreateOval(0.72, 0.52, 0.72, oriHeight + 0.06, oriHeight + 0.08, 1.5, 0.2, 5);
 
 
 	/*fanBaseP1.DrawWireframe();
@@ -208,11 +208,11 @@ void drawFanNeck(float oriHeight) {
 	Mesh	fanNeckP4;
 	Mesh	fanNeckP5;
 
-	fanNeckP1.CreateFanNeck(0.36, 0.34, oriHeight, oriHeight + 0.1, 0, 0.1);
-	fanNeckP2.CreateFanNeck(0.34, 0.32, oriHeight + 0.1, oriHeight + 0.2, 0.1, 0.15);
-	fanNeckP3.CreateFanNeck(0.32, 0.30, oriHeight + 0.2, oriHeight + 0.3, 0.15, 0.2);
-	fanNeckP4.CreateFanNeck(0.30, 0.28, oriHeight + 0.3, oriHeight + 0.5, 0.2, 0.3);
-	fanNeckP5.CreateFanNeck(0.28, 0.25, oriHeight + 0.5, oriHeight + 1, 0.3, 0.6);
+	fanNeckP1.CreateFanNeck(0.36, 0.34, oriHeight, oriHeight + 0.1, 0, 0.1, 0);
+	fanNeckP2.CreateFanNeck(0.34, 0.32, oriHeight + 0.1, oriHeight + 0.2, 0.1, 0.15, 1);
+	fanNeckP3.CreateFanNeck(0.32, 0.30, oriHeight + 0.2, oriHeight + 0.3, 0.15, 0.2, 2);
+	fanNeckP4.CreateFanNeck(0.30, 0.28, oriHeight + 0.3, oriHeight + 0.5, 0.2, 0.3,3);
+	fanNeckP5.CreateFanNeck(0.28, 0.25, oriHeight + 0.5, oriHeight + 1, 0.3, 0.6,4);
 
 	/*fanNeckP1.DrawWireframe();
 	fanNeckP2.DrawWireframe();
@@ -242,14 +242,14 @@ void drawFanBody() {
 #pragma region FanDome
 void drawDomeLine(float arr[circleCount][2], float low, float high, int section, float innerRadius, float outterRadius) {
 	glBegin(GL_LINES);
-	for (int i = 0; i < circleCount; i++) {
-		float x = arr[i][0];
+	for (int i = 0; i <= circleCount; i++) {
+		float x = arr[i%circleCount][0];
 		float y = low;
-		float z = arr[i][1];
+		float z = arr[i%circleCount][1];
 		for (int j = 1; j <= section; j++) {
 			glVertex3f(x, y, z);
-			x = cos(i*(360 / circleCount)*DEG2RAD)*(innerRadius + (outterRadius - innerRadius) / section * j);
-			z = sin(i*(360 / circleCount)*DEG2RAD)*(innerRadius + (outterRadius - innerRadius) / section * j);
+			x = cos(i*(360.0f / circleCount)*DEG2RAD)*(innerRadius + (outterRadius - innerRadius) / section * j);
+			z = sin(i*(360.0f / circleCount)*DEG2RAD)*(innerRadius + (outterRadius - innerRadius) / section * j);
 			y = (high - low) / section * j + low;
 			glVertex3f(x, y, z);
 		}
@@ -275,20 +275,20 @@ void drawDomeFront(float radius, float height) {
 	float outterHeight = 0.0f;
 	int		   section = 10;
 	for (int i = 0; i < circleCount; i++) {
-		SubCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)* subRadius;
-		SubCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)* subRadius;
+		SubCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)* subRadius;
+		SubCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)* subRadius;
 
-		InnerCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)* innerRadius;
-		InnerCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)* innerRadius;
+		InnerCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)* innerRadius;
+		InnerCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)* innerRadius;
 
-		InCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)*    inRadius;
-		InCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)*    inRadius;
+		InCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)*    inRadius;
+		InCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)*    inRadius;
 
-		MiddleCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)*middleRadius;
-		MiddleCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)*middleRadius;
+		MiddleCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)*middleRadius;
+		MiddleCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)*middleRadius;
 
-		OutterCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)*outterRadius;
-		OutterCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)*outterRadius;
+		OutterCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)*outterRadius;
+		OutterCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)*outterRadius;
 	}
 
 	glBegin(GL_TRIANGLE_FAN);
@@ -299,7 +299,7 @@ void drawDomeFront(float radius, float height) {
 	glEnd();
 
 	glBegin(GL_LINES);
-	for (int i = 0; i < circleCount; i++) {
+	for (int i = 0; i <= circleCount; i++) {
 		glVertex3f(InnerCircle[i%circleCount][0], innerHeight, InnerCircle[i%circleCount][1]);
 		glVertex3f(InnerCircle[(i + 1) % circleCount][0], innerHeight, InnerCircle[(i + 1) % circleCount][1]);
 
@@ -339,20 +339,20 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 	float outterHeight = height;
 	int		   section = 10;
 	for (int i = 0; i < circleCount; i++) {
-		SubCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)* subRadius;
-		SubCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)* subRadius;
+		SubCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)* subRadius;
+		SubCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)* subRadius;
 
-		InnerCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)* innerRadius;
-		InnerCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)* innerRadius;
+		InnerCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)* innerRadius;
+		InnerCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)* innerRadius;
 
-		InCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)*    inRadius;
-		InCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)*    inRadius;
+		InCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)*    inRadius;
+		InCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)*    inRadius;
 
-		MiddleCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)*middleRadius;
-		MiddleCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)*middleRadius;
+		MiddleCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)*middleRadius;
+		MiddleCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)*middleRadius;
 
-		OutterCircle[i][0] = cos(i*(360 / circleCount)*DEG2RAD)*outterRadius;
-		OutterCircle[i][1] = sin(i*(360 / circleCount)*DEG2RAD)*outterRadius;
+		OutterCircle[i][0] = cos(i*(360.0f / circleCount)*DEG2RAD)*outterRadius;
+		OutterCircle[i][1] = sin(i*(360.0f / circleCount)*DEG2RAD)*outterRadius;
 	}
 
 	glBegin(GL_TRIANGLE_FAN);
@@ -399,17 +399,6 @@ void drawFan() {
 	drawAxis();
 	glViewport(0, 0, screenWidth/2, screenHeight);
 
-	//glRotatef(45, 1, 0, 0);
-
-	//if (angle <=180) 
-	//	glRotatef(angle-90, 0, 1, 0);
-	//else 
-	//	glRotatef(-angle-90, 0, 1, 0);
-
-	//glTranslatef(0, 2, 0);
-	//glRotatef(90, 1, 0, 0);
-	//glTranslatef(0, 1, 0);
-
 	glPushMatrix();
 	drawFanBody();
 	glPopMatrix();
@@ -417,16 +406,18 @@ void drawFan() {
 	glTranslatef(0, 1.8, -0.9);
 	glRotatef(30, 1, 0, 0);
 
-	if (angle <=180) 
-		glRotatef((angle-90), 0, 0, 1);
+
+	if (angle <= 180)
+		glRotatef(angle*120/180 - 60, 0, 0, 1);
 	else 
-		glRotatef((-angle-90), 0, 0, 1);
+		glRotatef((360-angle)*12/18-60, 0, 0, 1);
 
 	glTranslatef(0, 1, 0);
 	drawWholeFanBlade(); //Vẽ toàn bộ 5 cánh quạt và trục
 	glTranslatef(0, -0.3, 0);
 	drawEngineCover(); //Vẽ hộp động cơ
 	
+	glColor3f(0.52f, 0.52f, 0.52f);
 	drawDomeRear(2.8, 0.4, 0.1); //Vẽ phần lưới quạt phía sau
 	glTranslatef(0, 0.5, 0);
 	drawDomeFront(2.8, 0.6); //Vẽ phần lưới quạt phía trước
@@ -518,7 +509,7 @@ void myInit() {
 	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-fHalfSize * 2, fHalfSize * 2, -fHalfSize * 2, fHalfSize * 2, -1000 * 2, 1000 * 2);
+	glOrtho(-fHalfSize , fHalfSize , -fHalfSize, fHalfSize, -1000 , 1000);
 }
 
 void myDisplay() {

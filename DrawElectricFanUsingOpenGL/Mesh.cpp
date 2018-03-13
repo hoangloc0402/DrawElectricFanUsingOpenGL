@@ -2,7 +2,7 @@
 #include <math.h>
 
 #define PI			3.1415926
-#define	COLORNUM		33
+#define	COLORNUM		48
 #define DEG2RAD (3.14159f/180.0f)
 
 float	ColorArr[COLORNUM][3] = { { 0.6f, 0.0f, 0.0f },{ 0.7f, 0.0f, 0.0f },{ 1.0f, 0.0f, 0.0f },
@@ -15,7 +15,11 @@ float	ColorArr[COLORNUM][3] = { { 0.6f, 0.0f, 0.0f },{ 0.7f, 0.0f, 0.0f },{ 1.0f
 { 0.78f, 0.78f, 0.78f },
 { 0.2f, 0.0f, 0.4f },{ 0.24f, 0.0f, 0.46f },{ 0.28f, 0.0f, 0.52f },{ 0.32f, 0.0f, 0.58f },{ 0.36f, 0.0f, 0.64f },
 { 0.4f, 0.0f, 0.7f },{ 0.44f, 0.0f, 0.76f },{ 0.48f, 0.0f, 0.82f },{ 0.52f, 0.0f, 0.88f },{ 0.56f, 0.0f, 0.94f },
-{ 0.6f, 0.0f, 1.0f } };
+{ 0.6f, 0.0f, 1.0f },{ 0.5f, 1.0f, 0.0f }, {0.65f, 1.0f, 0.28f}, { 0.0f, 0.48f, 0.8f} ,{0.0f, 0.3f, 0.5f},
+{ 0.0f, 0.44f, 0.74f},{ 0.0f, 0.41f, 0.68f },{ 0.0f, 0.37f, 0.62f },{ 0.0f, 0.34f, 0.56f },
+{ 0.61f, 0.79f, 0.09f},{ 0.58f, 0.76f, 0.09f },{ 0.56f, 0.72f, 0.08f },{ 0.53f, 0.69f, 0.08f },
+{ 0.51f, 0.65f, 0.07f },{ 0.48f, 0.62f, 0.07f }, {0.12f, 0.6f, 0.26f}
+};
 
 
 void Mesh::DrawWireframe() {
@@ -230,7 +234,7 @@ void Mesh::CreateFanBlade(float length, float height) {
 	}
 }
 
-void Mesh::CreateOval(float radius1, float radius2, float radius3, float heightBot, float heightUp, float length, float delta) {
+void Mesh::CreateOval(float radius1, float radius2, float radius3, float heightBot, float heightUp, float length, float delta, int color) {
 	int i;
 	numVerts = 42;
 	pt = new Point3[numVerts];
@@ -252,9 +256,7 @@ void Mesh::CreateOval(float radius1, float radius2, float radius3, float heightB
 	face[21].vert = new VertexID[face[21].nVerts];
 	for (i = 0; i < 20; i++) {
 		face[20].vert[i].vertIndex = i;
-		face[20].vert[i].colorIndex = 1;
 		face[21].vert[i].vertIndex = i + 20;
-		face[21].vert[i].colorIndex = 1;
 	}
 	for (i = 0; i < 20; i++) {
 		face[i].nVerts = 4;
@@ -263,13 +265,82 @@ void Mesh::CreateOval(float radius1, float radius2, float radius3, float heightB
 		face[i].vert[1].vertIndex = i;
 		face[i].vert[2].vertIndex = i + 20;
 		face[i].vert[3].vertIndex = (i + 1) % 20 + 20;
-		for (int j = 0; j<face[i].nVerts; j++)
-			face[i].vert[j].colorIndex = 1;
 	}
-
+	switch (color) {
+	case 0: 
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 33;
+			face[21].vert[i].colorIndex = 34;
+			face[i].vert[0].colorIndex = 33;
+			face[i].vert[1].colorIndex = 33;
+			face[i].vert[2].colorIndex = 34;
+			face[i].vert[3].colorIndex = 34;
+		}
+		break;
+	case 1:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 46;
+			face[21].vert[i].colorIndex = 45;
+			face[i].vert[0].colorIndex = 46;
+			face[i].vert[1].colorIndex = 46;
+			face[i].vert[2].colorIndex = 45;
+			face[i].vert[3].colorIndex = 45;
+		}
+		break;
+	case 2:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 45;
+			face[21].vert[i].colorIndex = 44;
+			face[i].vert[0].colorIndex = 45;
+			face[i].vert[1].colorIndex = 45;
+			face[i].vert[2].colorIndex = 44;
+			face[i].vert[3].colorIndex = 44;
+		}
+		break;
+	case 3:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 44;
+			face[21].vert[i].colorIndex = 43;
+			face[i].vert[0].colorIndex = 44;
+			face[i].vert[1].colorIndex = 44;
+			face[i].vert[2].colorIndex = 43;
+			face[i].vert[3].colorIndex = 43;
+		}
+		break;
+	case 4:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 43;
+			face[21].vert[i].colorIndex = 42;
+			face[i].vert[0].colorIndex = 43;
+			face[i].vert[1].colorIndex = 43;
+			face[i].vert[2].colorIndex = 42;
+			face[i].vert[3].colorIndex = 42;
+		}
+		break;
+	case 5:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 42;
+			face[21].vert[i].colorIndex = 41;
+			face[i].vert[0].colorIndex = 42;
+			face[i].vert[1].colorIndex = 42;
+			face[i].vert[2].colorIndex = 41;
+			face[i].vert[3].colorIndex = 41;
+		}
+		break;
+	case 6:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 47;
+			face[21].vert[i].colorIndex = 47;
+			face[i].vert[0].colorIndex = 47;
+			face[i].vert[1].colorIndex = 47;
+			face[i].vert[2].colorIndex = 47;
+			face[i].vert[3].colorIndex = 47;
+		}
+		break;
+	}
 }
 
-void Mesh::CreateFanNeck(float radius1, float radius2, float heightBot, float heightUp, float oldDelta, float newDelta) {
+void Mesh::CreateFanNeck(float radius1, float radius2, float heightBot, float heightUp, float oldDelta, float newDelta, int color) {
 	int i;
 	numVerts = 42;
 	pt = new Point3[numVerts];
@@ -287,9 +358,7 @@ void Mesh::CreateFanNeck(float radius1, float radius2, float heightBot, float he
 	face[21].vert = new VertexID[face[21].nVerts];
 	for (i = 0; i < 20; i++) {
 		face[20].vert[i].vertIndex = i;
-		face[20].vert[i].colorIndex = 1;
 		face[21].vert[i].vertIndex = i + 20;
-		face[21].vert[i].colorIndex = 1;
 	}
 	for (i = 0; i < 20; i++) {
 		face[i].nVerts = 4;
@@ -298,8 +367,59 @@ void Mesh::CreateFanNeck(float radius1, float radius2, float heightBot, float he
 		face[i].vert[1].vertIndex = i;
 		face[i].vert[2].vertIndex = i + 20;
 		face[i].vert[3].vertIndex = (i + 1) % 20 + 20;
-		for (int j = 0; j<face[i].nVerts; j++)
-			face[i].vert[j].colorIndex = 1;
+		
+	}
+	switch (color) {
+	case 0:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 35;
+			face[21].vert[i].colorIndex = 37;
+			face[i].vert[0].colorIndex = 35;
+			face[i].vert[1].colorIndex = 35;
+			face[i].vert[2].colorIndex = 37;
+			face[i].vert[3].colorIndex = 37;
+		}
+		break;
+	case 1:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 37;
+			face[21].vert[i].colorIndex = 38;
+			face[i].vert[0].colorIndex = 37;
+			face[i].vert[1].colorIndex = 37;
+			face[i].vert[2].colorIndex = 38;
+			face[i].vert[3].colorIndex = 38;
+		}
+		break;
+	case 2:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 38;
+			face[21].vert[i].colorIndex = 39;
+			face[i].vert[0].colorIndex = 38;
+			face[i].vert[1].colorIndex = 38;
+			face[i].vert[2].colorIndex = 39;
+			face[i].vert[3].colorIndex = 39;
+		}
+		break;
+	case 3:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 39;
+			face[21].vert[i].colorIndex = 40;
+			face[i].vert[0].colorIndex = 39;
+			face[i].vert[1].colorIndex = 39;
+			face[i].vert[2].colorIndex = 40;
+			face[i].vert[3].colorIndex = 40;
+		}
+		break;
+	case 4:
+		for (i = 0; i < 20; i++) {
+			face[20].vert[i].colorIndex = 40;
+			face[21].vert[i].colorIndex = 36;
+			face[i].vert[0].colorIndex = 40;
+			face[i].vert[1].colorIndex = 40;
+			face[i].vert[2].colorIndex = 36;
+			face[i].vert[3].colorIndex = 36;
+		}
+		break;
 	}
 
 }
