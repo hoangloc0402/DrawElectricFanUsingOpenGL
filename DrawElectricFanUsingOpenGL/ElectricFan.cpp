@@ -9,6 +9,10 @@ GLfloat angle;
 int		screenWidth = 1200;
 int		screenHeight = 600;
 const int circleCount = 40; //Số lượng vòng tròn trong lưới quạt
+float eyeX, eyeY, eyeZ, upX, upY, upZ, centerX, centerY, centerZ;
+float Radius = 4;
+float alpha = 45;
+float beta = 45;
 int fanSpeed = 20;
 
 void drawAxis() {
@@ -87,10 +91,10 @@ void drawSwitch(float heightBot) {
 	glTranslatef(0, 0, 1);
 
 	fanSwitchP1.CreateConical(0.4, 0.4, 0.1, heightBot, 1);
-	fanSwitchP2.CreateOval(0.1, 0.1, 0.1, heightBot + 0.1, heightBot + 0.11, 0.35, 0);
-	fanSwitchP3.CreateOval(0.09, 0.09, 0.09, heightBot + 0.11, heightBot + 0.12, 0.35, 0);
-	fanSwitchP4.CreateOval(0.08, 0.08, 0.08, heightBot + 0.12, heightBot + 0.13, 0.35, 0);
-	fanSwitchP5.CreateOval(0.07, 0.07, 0.07, heightBot + 0.13, heightBot + 0.15, 0.35, 0);
+	fanSwitchP2.CreateOval(0.1, 0.1, 0.1, heightBot + 0.1, heightBot + 0.11, 0.25, 0);
+	fanSwitchP3.CreateOval(0.09, 0.09, 0.09, heightBot + 0.11, heightBot + 0.12, 0.25, 0);
+	fanSwitchP4.CreateOval(0.08, 0.08, 0.08, heightBot + 0.12, heightBot + 0.13, 0.25, 0);
+	fanSwitchP5.CreateOval(0.07, 0.07, 0.07, heightBot + 0.13, heightBot + 0.15, 0.25, 0);
 
 
 	/*fanSwitchP1.DrawWireframe();
@@ -140,7 +144,7 @@ void drawRopes(float length, float posX, float posZ) {
 	Mesh fanRopesP4;
 	Mesh fanRopesP5;
 
-	glTranslatef(-posX, 0, posZ);
+	glTranslatef(-posX, -0.15, posZ);
 
 	glRotatef(-90, 1, 0, 0);
 
@@ -165,7 +169,7 @@ void drawRopes(float length, float posX, float posZ) {
 
 
 	glRotatef(-90, -1, 0, 0);
-	glTranslatef(posX, 0, -posZ);
+	glTranslatef(posX, 0.15, -posZ);
 
 }
 
@@ -227,10 +231,10 @@ void drawFanBody() {
 	float oriHeight = 0.22;
 	drawFanBase(oriHeight);
 	drawFanNeck(oriHeight + 0.28);
-	drawSwitch(0.3);
+	drawSwitch(0.35);
 	drawContractor();
-	drawRopes(1.5, 0.15, 3.2);
-	drawRopes(2, -0.15, 3.7);
+	drawRopes(2.5, 0.15, 4.2);
+	drawRopes(3, -0.15, 4.7);
 }
 #pragma endregion
 
@@ -406,10 +410,19 @@ void drawFan() {
 	//glRotatef(90, 1, 0, 0);
 	//glTranslatef(0, 1, 0);
 
+	glPushMatrix();
 	drawFanBody();
+	glPopMatrix();
 
-	glTranslatef(0.1, -2.4, -1);
-	glRotatef(180, 1,0, 0);
+	glTranslatef(0, 1.8, -0.9);
+	glRotatef(30, 1, 0, 0);
+
+	if (angle <=180) 
+		glRotatef((angle-90), 0, 0, 1);
+	else 
+		glRotatef((-angle-90), 0, 0, 1);
+
+	glTranslatef(0, 1, 0);
 	drawWholeFanBlade(); //Vẽ toàn bộ 5 cánh quạt và trục
 	glTranslatef(0, -0.3, 0);
 	drawEngineCover(); //Vẽ hộp động cơ
@@ -423,20 +436,98 @@ void drawFan() {
 
 
 
+void processTimer(int value) {
+	angle += (GLfloat)value / 5;
+	if (angle > 360.0f) angle -= 360.0f;
+	glutTimerFunc(25, processTimer, value);
+	glutPostRedisplay();
+}
 
+void onKeyboard(unsigned char key, int x, int y) {
+	switch (key) {
+	case '+': 
+		fanSpeed += 4;
+		break;
+	case '-': 
+		fanSpeed -= 4;
+		break;
+	default: break;
+	}
+	if (fanSpeed > 20) fanSpeed = 20;
+	if (fanSpeed < 2) fanSpeed = 2;
+	glutPostRedisplay();
+}
 
+int o_x, o_y;
+void onMouseDown(int button, int state, int x, int y) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		o_x = x;
+		o_y = y;
+	}
+}
 
+void onMotion(int x, int y) {
+	//cout << "old (" << o_x << "," << o_y << ")" << endl;
+	//cout << "new (" << x << "," << y << ")" << endl;
+	o_x = x;
+	o_y = y;
+	glutPostRedisplay();
+}
 
+void view() {
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+}
 
+void initOpenGL() {
+	//setup projection type
+	//glFrustrum: define viewing volume
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glFrustum(
+		-2.0,	//left
+		2.0,	//right
+		-2.0,	//bottom
+		2.0,	//top
+		2.0,	//near
+		10.0	//far
+	);
+	//Default MatrixMode is MODELVIEW 
+	glMatrixMode(GL_MODELVIEW);
 
+	glEnable(GL_DEPTH_TEST);
+}
 
+void initialize() {
+	eyeX = Radius * cos(DEG2RAD * alpha)*cos(DEG2RAD*beta);
+	eyeY = Radius * sin(DEG2RAD * beta);
+	eyeZ = Radius * sin(DEG2RAD * alpha)*sin(DEG2RAD*beta);
+	centerX = 0;
+	centerY = 0;
+	centerZ = 0;
+	upX = 0;
+	upY = 1;
+	upZ = 0;
+}
 
-
+void myInit() {
+	float	fHalfSize = 4;
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-fHalfSize * 2, fHalfSize * 2, -fHalfSize * 2, fHalfSize * 2, -1000 * 2, 1000 * 2);
+}
 
 void myDisplay() {
+	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//initialize(); initOpenGL(); view();
+
 	gluLookAt(
 		1.5*cos(DEG2RAD*angle),	//eyeX
 		1.5*sin(DEG2RAD*angle),	//eyeY
@@ -448,6 +539,7 @@ void myDisplay() {
 		1.0,	//up vector Y
 		0.0		//up vector Z
 	);
+
 
 	drawFan();
 
@@ -468,40 +560,7 @@ void myDisplay() {
 	glutSwapBuffers();
 }
 
-void myInit() {
-	float	fHalfSize = 4;
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glFrontFace(GL_CCW);
-	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-fHalfSize * 2, fHalfSize * 2, -fHalfSize * 2, fHalfSize * 2, -1000 * 2, 1000 * 2);
-}
-
-void processTimer(int value) {
-	angle += (GLfloat)value / 5;
-	if (angle > 360.0f) angle -= 360.0f;
-	glutTimerFunc(25, processTimer, value);
-	glutPostRedisplay();
-}
-
-void myKeyboard(unsigned char key, int x, int y) {
-	switch (key) {
-	case '+': 
-		fanSpeed += 2;
-		break;
-	case '-': 
-		fanSpeed -= 2;
-		break;
-	default: break;
-	}
-	if (fanSpeed > 20) fanSpeed = 20;
-	if (fanSpeed <2) fanSpeed = 2;
-	glutPostRedisplay();
-}
-
 int main(int argc, CHAR* argv[]) {
-
 
 	glutInit(&argc, (char**)argv); //initialize the tool kit
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);//set the display mode
@@ -512,7 +571,9 @@ int main(int argc, CHAR* argv[]) {
 	myInit();
 	glutDisplayFunc(myDisplay);
 	glutTimerFunc(5, processTimer, 5);
-	glutKeyboardFunc(myKeyboard);
+	glutKeyboardFunc(onKeyboard);
+	glutMotionFunc(onMotion);
+	glutMouseFunc(onMouseDown);
 	glutMainLoop();
 	return 0;
 }
