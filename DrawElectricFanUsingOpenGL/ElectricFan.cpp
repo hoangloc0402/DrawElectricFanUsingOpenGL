@@ -2,6 +2,7 @@
 #include <iostream>
 #include "supportClass.h"
 #include "Mesh.h"
+#include "glut.h"
 #define DEG2RAD (3.14159f/180.0f)
 using namespace std;
 
@@ -508,6 +509,19 @@ void onSpecialKey(int key, int x, int y) {
 		break;
 	case GLUT_KEY_PAGE_DOWN:	// Zoom out
 		orthorScaler += 0.2;
+		break;
+	case GLUT_KEY_UP:
+		beta -= deltaAngle;		
+		break;
+	case GLUT_KEY_DOWN:
+		beta += deltaAngle;		
+		break;
+	case GLUT_KEY_LEFT:
+		alpha -= deltaAngle;	
+		break;
+	case GLUT_KEY_RIGHT:
+		alpha += deltaAngle;	
+		break;
 	default:
 		break;
 	}
@@ -561,7 +575,6 @@ void initOpenGL() {
 	//Default MatrixMode is MODELVIEW 
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_DEPTH_TEST);
-
 }
 void initialize() {
 	eyeX = Radius * cos(DEG2RAD * alpha);
