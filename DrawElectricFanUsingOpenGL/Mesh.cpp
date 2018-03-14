@@ -51,6 +51,7 @@ void Mesh::DrawColor() {
 	}
 }
 
+//Vẽ hình chóp cụ với 2 bán kính đáy, chiều cao, tooạ độ tâm đường tròn đáy và màu
 void Mesh::CreateConical(float radius1, float radius2, float height, float y, int color) {
 	int i;
 	numVerts = 42;
@@ -155,6 +156,7 @@ void Mesh::CreateConical(float radius1, float radius2, float height, float y, in
 
 }
 
+//Hàm vẽ cánh quạt
 void Mesh::CreateFanBlade(float length, float height) {
 
 	int i;
@@ -233,6 +235,15 @@ void Mesh::CreateFanBlade(float length, float height) {
 			face[i].vert[j].colorIndex = 18;
 	}
 }
+
+/*
+	Hàm CreateOval để vẽ một hình oval với bán kính 2 đầu là radius1, radius2.
+	radius3 dùng đẻ để thay đổi bán kính cho một đường tròn trên.
+	heightBot, heightUp là chiều cao bắt đầu của hình và chiều cao kết thúc của hình
+	length là độ dài của phần giữa hình oval cần vẽ
+	delta là khoảng lệch độ cao giữa 2 bên đầu oval
+	color là tham số để tạo màu
+*/
 
 void Mesh::CreateOval(float radius1, float radius2, float radius3, float heightBot, float heightUp, float length, float delta, int color) {
 	int i;
@@ -339,6 +350,14 @@ void Mesh::CreateOval(float radius1, float radius2, float radius3, float heightB
 		break;
 	}
 }
+
+/*
+	Hàm CreateFanNeck để vẽ cổ quạt
+	radius1, radius2 là bán kính hình tròn trên và dưới
+	heightBot, heightUp là chiều cao bắt đầu và kết thúc của hình
+	oldDelta, newDelta là 2 tham số về độ lệch của tâm hình tròn khỏi trục y
+	color là tham số để tạo màu
+*/
 
 void Mesh::CreateFanNeck(float radius1, float radius2, float heightBot, float heightUp, float oldDelta, float newDelta, int color) {
 	int i;

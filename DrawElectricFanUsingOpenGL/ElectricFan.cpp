@@ -9,15 +9,16 @@ GLfloat angle;
 int		screenWidth = 800;
 int		screenHeight = 800;
 const int circleCount = 100; //Số lượng vòng tròn trong lưới quạt
-int fanSpeed = 0;
-float orthorScaler = 3;
-bool swing = false;
-bool displayBody = false;
-bool displayEngine = false;
-bool displayDome = false;
-bool displayFanBlade = false;
-bool draw4Fan = false;
+int fanSpeed = 0; //Tốc độ quạt, ấn "+" "-" để thay đổi
+float orthorScaler = 3; //Tham số để scale to nhỏ, tuỳ chỉnh bằng pageup và pagedown
+bool swing = false; //Thay đổi chế độ swing của quạt, ấn "s" để thay đổi
+bool displayBody = false; //Biến xác định có hiển thị thân quạt hay không, ấn "b" để thay đổi
+bool displayEngine = false; //Biến xác định có hiển thị động cơ hay không, ấn "e" để thay đổi
+bool displayDome = false; //Biến xác định có hiển thị lưới quạt hay không, ấn "d" để thay đổi
+bool displayFanBlade = false; //Biến xác định có hiển thị cánh quạt hay không, ấn "f" để thay đổi
+bool draw4Fan = false; //Biến xác định sẽ vẽ 4 quạt cùng lúc hoặc 1 quạt
 
+//Các tham số điều chỉnh góc nhìn khi click kéo chuột
 int o_x, o_y;
 float eyeX, eyeY, eyeZ;
 float centerX, centerY, centerZ;
@@ -28,6 +29,7 @@ float deltaAngle = 5;
 float dR = 0.2;
 float Radius = 4;
 
+//Vẽ trục toạ độ
 void drawAxis() {
 	glColor3f(0, 0, 1);
 	glBegin(GL_LINES);
@@ -41,17 +43,20 @@ void drawAxis() {
 }
 
 #pragma region FanBladeAndEngine
+//Chọn hình thức tô màu
 void fillColorAndFrame(Mesh &m) {
 	m.DrawColor();
 	//m.DrawWireframe();
 }
 
+//Vẽ một cánh quạt
 void drawOneBlade() {
 	Mesh blade;
 	blade.CreateFanBlade(2, 0.3);
 	fillColorAndFrame(blade);
 }
 
+//Vẽ hộp động cơ
 void drawEngineCover() {
 	Mesh engineCoverPart1, engineCoverPart2, engineCoverPart3, engineCoverPart4, engineCoverPart5;
 
@@ -68,6 +73,7 @@ void drawEngineCover() {
 	fillColorAndFrame(engineCoverPart5);
 }
 
+//Vẽ toàn bộ cánh quạt
 void drawWholeFanBlade() {
 
 	glPushMatrix();
@@ -93,12 +99,15 @@ void drawWholeFanBlade() {
 #pragma endregion
 
 #pragma region FanBody
+//Vẽ núm vận cho quạt
 void drawSwitch(float heightBot) {
 	Mesh fanSwitchP1;
 	Mesh fanSwitchP2;
 	Mesh fanSwitchP3;
 	Mesh fanSwitchP4;
 	Mesh fanSwitchP5;
+
+	glPushMatrix();
 
 	glTranslatef(0, 0, 1.5);
 
@@ -121,30 +130,36 @@ void drawSwitch(float heightBot) {
 	fanSwitchP4.DrawColor();
 	fanSwitchP5.DrawColor();
 
-	glTranslatef(0, 0, -1.5);
+	glPopMatrix();
 }
 
+//Vẽ trục tiếp xúc giữa động cơ và cổ quạt
 void drawContractor() {
 	Mesh fanContractor;
+
+	glPushMatrix();
+
 	glTranslatef(0.1, 1.6, -0.75);
 	glRotatef(30, 1, 0, 0);
 	glRotatef(90, 0, 0, 1);
 
 	fanContractor.CreateOval(0.2, 0.2, 0.2, 0, 0.2, 0.15, 0, 0);
+
 	//fanContractor.DrawWireframe();
 	fanContractor.DrawColor();
 
-	glRotatef(-90, 0, 0, -1);
-	glRotatef(-30, -1, 0, 0);
-	glTranslatef(0.1, 1.6, 0.75);
+	glPopMatrix();
 }
 
+//Vẽ dây
 void drawRopes(float length, float posX, float posZ) {
 	Mesh fanRopesP1;
 	Mesh fanRopesP2;
 	Mesh fanRopesP3;
 	Mesh fanRopesP4;
 	Mesh fanRopesP5;
+
+	glPushMatrix();
 
 	glTranslatef(-posX, -0.15, posZ);
 
@@ -170,10 +185,10 @@ void drawRopes(float length, float posX, float posZ) {
 
 
 
-	glRotatef(-90, -1, 0, 0);
-	glTranslatef(posX, 0.15, -posZ);
+	glPopMatrix();
 }
 
+//Vẽ đế quạt
 void drawFanBase(float oriHeight) {
 	Mesh	fanBaseP1;
 	Mesh	fanBaseP2;
@@ -202,6 +217,7 @@ void drawFanBase(float oriHeight) {
 
 }
 
+//Vẽ cổ quạt
 void drawFanNeck(float oriHeight) {
 	Mesh	fanNeckP1;
 	Mesh	fanNeckP2;
@@ -228,6 +244,7 @@ void drawFanNeck(float oriHeight) {
 	fanNeckP5.DrawColor();
 }
 
+//Vẽ toàn thân quạt
 void drawFanBody() {
 	float oriHeight = 0.22;
 	drawFanBase(oriHeight);
@@ -394,7 +411,7 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 }
 #pragma endregion
 
-
+//Hàm vẽ toàn bộ quạt
 void drawFan() {
 	glPushMatrix();
 
@@ -432,7 +449,7 @@ void drawFan() {
 	glPopMatrix();
 }
 
-
+//Các hàm callback
 #pragma region Callback Func
 void processTimer(int value) {
 	angle += (GLfloat)value / 5;
@@ -528,7 +545,6 @@ void view() {
 	gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 	glOrtho(-orthorScaler, orthorScaler, -orthorScaler, orthorScaler, -orthorScaler, orthorScaler);
 }
-
 void initOpenGL() {
 	//setup projection type
 	//glFrustrum: define viewing volume
@@ -547,7 +563,6 @@ void initOpenGL() {
 	glEnable(GL_DEPTH_TEST);
 
 }
-
 void initialize() {
 	eyeX = Radius * cos(DEG2RAD * alpha);
 	eyeY = Radius * sin(DEG2RAD * beta);
@@ -595,8 +610,7 @@ void myDisplay() {
 		glPopMatrix();
 
 	}
-	else 
-		drawFan();
+	else drawFan();
 
 	glFlush();
 	glutSwapBuffers();
@@ -604,11 +618,11 @@ void myDisplay() {
 
 int main(int argc, CHAR* argv[]) {
 
-	glutInit(&argc, (char**)argv); //initialize the tool kit
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);//set the display mode
-	glutInitWindowSize(screenWidth, screenHeight); //set window size
-	glutInitWindowPosition(50, 50); // set window position on screen
-	glutCreateWindow("Draw Electric Fannnnnnnnnnnnnnnnnnn"); // open the screen window
+	glutInit(&argc, (char**)argv); 
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(screenWidth, screenHeight); 
+	glutInitWindowPosition(50, 50); 
+	glutCreateWindow("Draw Electric Fan"); 
 
 	glutDisplayFunc(myDisplay);
 	glutTimerFunc(5, processTimer, 5);
