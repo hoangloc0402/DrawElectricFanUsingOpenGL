@@ -7,7 +7,7 @@ using namespace std;
 
 GLfloat angle;
 int		screenWidth = 800;
-int		screenHeight =800;
+int		screenHeight = 800;
 const int circleCount = 100; //Số lượng vòng tròn trong lưới quạt
 int fanSpeed = 0;
 float orthorScaler = 3;
@@ -16,6 +16,7 @@ bool displayBody = false;
 bool displayEngine = false;
 bool displayDome = false;
 bool displayFanBlade = false;
+bool draw4Fan = false;
 
 int o_x, o_y;
 float eyeX, eyeY, eyeZ;
@@ -54,11 +55,11 @@ void drawOneBlade() {
 void drawEngineCover() {
 	Mesh engineCoverPart1, engineCoverPart2, engineCoverPart3, engineCoverPart4, engineCoverPart5;
 
-	engineCoverPart1.CreateConical(0.4, 0.35, 0.1, -0.1,2);
-	engineCoverPart2.CreateConical(0.45, 0.4, 0.2, -0.3,2);
-	engineCoverPart3.CreateConical(0.45, 0.45, 0.4, -0.7,2);
-	engineCoverPart4.CreateConical(0.4, 0.45, 0.2, -0.9,2);
-	engineCoverPart5.CreateConical(0.35, 0.4, 0.1, -1,2);
+	engineCoverPart1.CreateConical(0.4, 0.35, 0.1, -0.1, 2);
+	engineCoverPart2.CreateConical(0.45, 0.4, 0.2, -0.3, 2);
+	engineCoverPart3.CreateConical(0.45, 0.45, 0.4, -0.7, 2);
+	engineCoverPart4.CreateConical(0.4, 0.45, 0.2, -0.9, 2);
+	engineCoverPart5.CreateConical(0.35, 0.4, 0.1, -1, 2);
 
 	fillColorAndFrame(engineCoverPart1);
 	fillColorAndFrame(engineCoverPart2);
@@ -80,13 +81,13 @@ void drawWholeFanBlade() {
 	glPopMatrix();
 
 	Mesh pivotCover, smallPivotCover, steelPivot;
-	pivotCover.CreateConical(0.3, 0.3, 0.3, 0,0);
+	pivotCover.CreateConical(0.3, 0.3, 0.3, 0, 0);
 	fillColorAndFrame(pivotCover);
 
-	smallPivotCover.CreateConical(0.25, 0.2, 0.15, 0.3,0);
+	smallPivotCover.CreateConical(0.25, 0.2, 0.15, 0.3, 0);
 	fillColorAndFrame(smallPivotCover);
 
-	steelPivot.CreateConical(0.1, 0.1, 0.3, -0.3,1);
+	steelPivot.CreateConical(0.1, 0.1, 0.3, -0.3, 1);
 	fillColorAndFrame(steelPivot);
 }
 #pragma endregion
@@ -149,11 +150,11 @@ void drawRopes(float length, float posX, float posZ) {
 
 	glRotatef(-90, 1, 0, 0);
 
-	fanRopesP1.CreateConical(0.08, 0.06, 0.1, 0,1);
-	fanRopesP2.CreateConical(0.06, 0.04, 0.2, 0.1,1);
-	fanRopesP3.CreateConical(0.04, 0.02, 0.3, 0.2,1);
-	fanRopesP4.CreateConical(0.02, 0.01, 0.4, 0.3,1);
-	fanRopesP5.CreateConical(0.01, 0.01, length, 0.4,1);
+	fanRopesP1.CreateConical(0.08, 0.06, 0.1, 0, 1);
+	fanRopesP2.CreateConical(0.06, 0.04, 0.2, 0.1, 1);
+	fanRopesP3.CreateConical(0.04, 0.02, 0.3, 0.2, 1);
+	fanRopesP4.CreateConical(0.02, 0.01, 0.4, 0.3, 1);
+	fanRopesP5.CreateConical(0.01, 0.01, length, 0.4, 1);
 
 	/*fanRopesP1.DrawWireframe();
 	fanRopesP2.DrawWireframe();
@@ -182,7 +183,7 @@ void drawFanBase(float oriHeight) {
 
 	fanBaseP1.CreateOval(0.8, 0.6, 0.8, 0, oriHeight, 1.5, 0.2, 1);
 	fanBaseP2.CreateOval(0.78, 0.58, 0.78, oriHeight, oriHeight + 0.02, 1.5, 0.2, 2);
-	fanBaseP3.CreateOval(0.76, 0.56, 0.76, oriHeight + 0.02, oriHeight + 0.04, 1.5, 0.2, 3 );
+	fanBaseP3.CreateOval(0.76, 0.56, 0.76, oriHeight + 0.02, oriHeight + 0.04, 1.5, 0.2, 3);
 	fanBaseP4.CreateOval(0.74, 0.54, 0.74, oriHeight + 0.04, oriHeight + 0.06, 1.5, 0.2, 4);
 	fanBaseP5.CreateOval(0.72, 0.52, 0.72, oriHeight + 0.06, oriHeight + 0.08, 1.5, 0.2, 5);
 
@@ -211,8 +212,8 @@ void drawFanNeck(float oriHeight) {
 	fanNeckP1.CreateFanNeck(0.36, 0.34, oriHeight, oriHeight + 0.1, 0, 0.1, 0);
 	fanNeckP2.CreateFanNeck(0.34, 0.32, oriHeight + 0.1, oriHeight + 0.2, 0.1, 0.15, 1);
 	fanNeckP3.CreateFanNeck(0.32, 0.30, oriHeight + 0.2, oriHeight + 0.3, 0.15, 0.2, 2);
-	fanNeckP4.CreateFanNeck(0.30, 0.28, oriHeight + 0.3, oriHeight + 0.5, 0.2, 0.3,3);
-	fanNeckP5.CreateFanNeck(0.28, 0.25, oriHeight + 0.5, oriHeight + 1, 0.3, 0.6,4);
+	fanNeckP4.CreateFanNeck(0.30, 0.28, oriHeight + 0.3, oriHeight + 0.5, 0.2, 0.3, 3);
+	fanNeckP5.CreateFanNeck(0.28, 0.25, oriHeight + 0.5, oriHeight + 1, 0.3, 0.6, 4);
 
 	/*fanNeckP1.DrawWireframe();
 	fanNeckP2.DrawWireframe();
@@ -394,7 +395,6 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 #pragma endregion
 
 
-
 void drawFan() {
 	glPushMatrix();
 
@@ -405,7 +405,7 @@ void drawFan() {
 		drawFanBody();
 	glPopMatrix();
 
-	glTranslatef(0, 1.8, -0.9);
+	glTranslatef(0, 1.7, -1.1);
 	glRotatef(30, 1, 0, 0);
 
 	if (swing) { //Nếu cho quạt quay (swing)
@@ -422,7 +422,7 @@ void drawFan() {
 	glTranslatef(0, -0.3, 0);
 	if (displayEngine)
 		drawEngineCover(); //Vẽ hộp động cơ
-	
+
 	if (displayDome) {
 		glColor3f(0.52f, 0.52f, 0.52f);
 		drawDomeRear(2.8, 0.4, 0.1); //Vẽ phần lưới quạt phía sau
@@ -431,7 +431,6 @@ void drawFan() {
 	}
 	glPopMatrix();
 }
-
 
 
 #pragma region Callback Func
@@ -451,7 +450,7 @@ void onKeyboard(unsigned char key, int x, int y) {
 		fanSpeed -= 4;
 		break;
 	case 's':
-		if (swing) swing = false; 
+		if (swing) swing = false;
 		else swing = true;
 		break;
 	case 'b':
@@ -459,7 +458,7 @@ void onKeyboard(unsigned char key, int x, int y) {
 		else displayBody = true;
 		break;
 	case 'd':
-		if (displayDome) displayDome= false;
+		if (displayDome) displayDome = false;
 		else displayDome = true;
 		break;
 	case 'f':
@@ -473,6 +472,10 @@ void onKeyboard(unsigned char key, int x, int y) {
 	case 'a':
 		displayBody = displayEngine = displayDome = displayFanBlade = true;
 		break;
+	case '4':
+		if (draw4Fan) draw4Fan = false;
+		else draw4Fan = true;
+		break;
 	default: break;
 	}
 	if (fanSpeed > 20) fanSpeed = 20;
@@ -484,7 +487,7 @@ void onSpecialKey(int key, int x, int y) {
 	switch (key) {
 
 	case GLUT_KEY_PAGE_UP:		// Zoom in
-		orthorScaler-=0.2;
+		orthorScaler -= 0.2;
 		break;
 	case GLUT_KEY_PAGE_DOWN:	// Zoom out
 		orthorScaler += 0.2;
@@ -567,12 +570,33 @@ void myDisplay() {
 	drawAxis();
 	glViewport(0, 0, screenWidth, screenHeight);
 
-	glRotatef(180, 0, 1, 0);
-	glTranslatef(1, 0, 1);
-	drawFan();
-	//glTranslatef(-1, 0, 2); drawFan();
+	if (draw4Fan) {
+		glPushMatrix();
+		glTranslatef(5, 0, 0);
+		drawFan();
+		glPopMatrix();
 
-	drawFan();
+		glPushMatrix();
+		glRotatef(90, 0, 1, 0);
+		glTranslatef(5, 0, 0);
+		drawFan();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotatef(180, 0, 1, 0);
+		glTranslatef(5, 0, 0);
+		drawFan();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotatef(270, 0, 1, 0);
+		glTranslatef(5, 0, 0);
+		drawFan();
+		glPopMatrix();
+
+	}
+	else 
+		drawFan();
 
 	glFlush();
 	glutSwapBuffers();
