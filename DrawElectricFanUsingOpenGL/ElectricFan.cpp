@@ -99,7 +99,7 @@ void drawSwitch(float heightBot) {
 	Mesh fanSwitchP4;
 	Mesh fanSwitchP5;
 
-	glTranslatef(0, 0, 1);
+	glTranslatef(0, 0, 1.5);
 
 	fanSwitchP1.CreateConical(0.4, 0.4, 0.1, heightBot, 1);
 	fanSwitchP2.CreateOval(0.1, 0.1, 0.1, heightBot + 0.1, heightBot + 0.11, 0.25, 0, 6);
@@ -120,7 +120,7 @@ void drawSwitch(float heightBot) {
 	fanSwitchP4.DrawColor();
 	fanSwitchP5.DrawColor();
 
-	glTranslatef(0, 0, -1);
+	glTranslatef(0, 0, -1.5);
 }
 
 void drawContractor() {
@@ -230,8 +230,8 @@ void drawFanNeck(float oriHeight) {
 void drawFanBody() {
 	float oriHeight = 0.22;
 	drawFanBase(oriHeight);
-	drawFanNeck(oriHeight + 0.28);
-	drawSwitch(0.35);
+	drawFanNeck(oriHeight + 0.2);
+	drawSwitch(0.3);
 	drawContractor();
 	drawRopes(2.5, 0.15, 4.2);
 	drawRopes(3, -0.15, 4.7);
