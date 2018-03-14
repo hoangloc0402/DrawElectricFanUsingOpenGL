@@ -6,14 +6,20 @@
 using namespace std;
 
 GLfloat angle;
-int		screenWidth = 1200;
-int		screenHeight = 600;
+int		screenWidth = 800;
+int		screenHeight =800;
 const int circleCount = 100; //Số lượng vòng tròn trong lưới quạt
-float eyeX, eyeY, eyeZ, upX, upY, upZ, centerX, centerY, centerZ;
-float Radius = 4;
+int fanSpeed = 20;
+
+int o_x, o_y;
+float eyeX, eyeY, eyeZ;
+float centerX, centerY, centerZ;
+float upX, upY, upZ;
 float alpha = 45;
 float beta = 45;
-int fanSpeed = 20;
+float deltaAngle = 5;
+float dR = 0.2;
+float Radius = 4;
 
 void drawAxis() {
 	glColor3f(0, 0, 1);
@@ -26,7 +32,6 @@ void drawAxis() {
 	glVertex3f(0, 0, 40);
 	glEnd();
 }
-
 
 #pragma region FanBladeAndEngine
 void fillColorAndFrame(Mesh &m) {
@@ -80,7 +85,6 @@ void drawWholeFanBlade() {
 }
 #pragma endregion
 
-
 #pragma region FanBody
 void drawSwitch(float heightBot) {
 	Mesh fanSwitchP1;
@@ -115,27 +119,17 @@ void drawSwitch(float heightBot) {
 
 void drawContractor() {
 	Mesh fanContractor;
-
-
 	glTranslatef(0.1, 1.6, -0.75);
-
 	glRotatef(30, 1, 0, 0);
-
 	glRotatef(90, 0, 0, 1);
 
-
-
 	fanContractor.CreateOval(0.2, 0.2, 0.2, 0, 0.2, 0.15, 0, 0);
-
 	//fanContractor.DrawWireframe();
-
 	fanContractor.DrawColor();
-
 
 	glRotatef(-90, 0, 0, -1);
 	glRotatef(-30, -1, 0, 0);
 	glTranslatef(0.1, 1.6, 0.75);
-
 }
 
 void drawRopes(float length, float posX, float posZ) {
@@ -237,7 +231,6 @@ void drawFanBody() {
 	drawRopes(3, -0.15, 4.7);
 }
 #pragma endregion
-
 
 #pragma region FanDome
 void drawDomeLine(float arr[circleCount][2], float low, float high, int section, float innerRadius, float outterRadius) {
@@ -394,11 +387,12 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 }
 #pragma endregion
 
-
 void drawFan() {
 	drawAxis();
-	glViewport(0, 0, screenWidth/2, screenHeight);
+	glViewport(0, 0, screenWidth, screenHeight);
 
+	glTranslatef(0, 1, 0);
+	glRotatef(90, 1, 0, 0);
 	glPushMatrix();
 	drawFanBody();
 	glPopMatrix();
@@ -427,6 +421,10 @@ void drawFan() {
 
 
 
+
+
+
+#pragma region Callback Func
 void processTimer(int value) {
 	angle += (GLfloat)value / 5;
 	if (angle > 360.0f) angle -= 360.0f;
@@ -436,10 +434,10 @@ void processTimer(int value) {
 
 void onKeyboard(unsigned char key, int x, int y) {
 	switch (key) {
-	case '+': 
+	case '+':
 		fanSpeed += 4;
 		break;
-	case '-': 
+	case '-':
 		fanSpeed -= 4;
 		break;
 	default: break;
@@ -449,7 +447,12 @@ void onKeyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
-int o_x, o_y;
+void onReshape(int w, int h) {
+	int size = min(w, h);
+	glViewport(0, 0, size, size);
+	glOrtho(-4, 4, -4, 4, -2000, -2000);
+}
+
 void onMouseDown(int button, int state, int x, int y) {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
 		o_x = x;
@@ -458,11 +461,49 @@ void onMouseDown(int button, int state, int x, int y) {
 }
 
 void onMotion(int x, int y) {
-	//cout << "old (" << o_x << "," << o_y << ")" << endl;
-	//cout << "new (" << x << "," << y << ")" << endl;
+	alpha += (x - o_x) / 2;
+	beta += (y - o_y) / 2;
 	o_x = x;
 	o_y = y;
 	glutPostRedisplay();
+}
+
+void onSpecialKey(int key, int x, int y) {
+	switch (key) {
+	case GLUT_KEY_UP:
+		beta -= deltaAngle;		// Object spins up
+		break;
+	case GLUT_KEY_DOWN:
+		beta += deltaAngle;		// Object spins down
+		break;
+	case GLUT_KEY_LEFT:
+		alpha -= deltaAngle;	// Object spins left
+		break;
+	case GLUT_KEY_RIGHT:
+		alpha += deltaAngle;	// Object spins right
+		break;
+	case GLUT_KEY_PAGE_UP:		// Zoom up
+		Radius -= dR;
+		break;
+	case GLUT_KEY_PAGE_DOWN:	// Zoom down
+		Radius += dR;
+	default:
+		break;
+	}
+
+	glutPostRedisplay();
+}
+#pragma endregion
+
+
+void myInit() {
+	float	fHalfSize = 4;
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glFrontFace(GL_CCW);
+	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-fHalfSize , fHalfSize , -fHalfSize, fHalfSize, -1000 , 1000);
 }
 
 void view() {
@@ -485,15 +526,15 @@ void initOpenGL() {
 		10.0	//far
 	);
 	//Default MatrixMode is MODELVIEW 
+	
 	glMatrixMode(GL_MODELVIEW);
-
 	glEnable(GL_DEPTH_TEST);
 }
 
 void initialize() {
-	eyeX = Radius * cos(DEG2RAD * alpha)*cos(DEG2RAD*beta);
+	eyeX = Radius * cos(DEG2RAD * alpha);
 	eyeY = Radius * sin(DEG2RAD * beta);
-	eyeZ = Radius * sin(DEG2RAD * alpha)*sin(DEG2RAD*beta);
+	eyeZ = Radius * sin(DEG2RAD * alpha);
 	centerX = 0;
 	centerY = 0;
 	centerZ = 0;
@@ -502,51 +543,17 @@ void initialize() {
 	upZ = 0;
 }
 
-void myInit() {
-	float	fHalfSize = 4;
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glFrontFace(GL_CCW);
-	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-fHalfSize , fHalfSize , -fHalfSize, fHalfSize, -1000 , 1000);
-}
-
 void myDisplay() {
 	
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	initOpenGL();
+	initialize();
+	view();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//initialize(); initOpenGL(); view();
-
-	gluLookAt(
-		1.5*cos(DEG2RAD*angle),	//eyeX
-		1.5*sin(DEG2RAD*angle),	//eyeY
-		1.5,	//eyeZ
-		0.0,	//reference point X
-		0.0,	//reference point Y
-		0.0,	//reference point Z
-		0.0,	//up vector X
-		1.0,	//up vector Y
-		0.0		//up vector Z
-	);
-
+	 
 
 	drawFan();
 
-	glLoadIdentity();
-	gluLookAt(
-		//1.5*cos(DEG2RAD*angle),	//eyeX
-		1.5*sin(DEG2RAD*angle),	//eyeY
-		1.5*cos(DEG2RAD*angle),
-		1.5,	//eyeZ
-		0.0,	//reference point X
-		0.0,	//reference point Y
-		0.0,	//reference point Z
-		0.0,	//up vector X
-		1.0,	//up vector Y
-		0.0		//up vector Z
-	);
 	glFlush();
 	glutSwapBuffers();
 }
@@ -557,14 +564,15 @@ int main(int argc, CHAR* argv[]) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);//set the display mode
 	glutInitWindowSize(screenWidth, screenHeight); //set window size
 	glutInitWindowPosition(50, 50); // set window position on screen
-	glutCreateWindow("Draw Fannnnnnnnnnnnnnnnnnn"); // open the screen window
+	glutCreateWindow("Draw Electric Fannnnnnnnnnnnnnnnnnn"); // open the screen window
 
-	myInit();
 	glutDisplayFunc(myDisplay);
 	glutTimerFunc(5, processTimer, 5);
 	glutKeyboardFunc(onKeyboard);
+	glutReshapeFunc(onReshape);
 	glutMotionFunc(onMotion);
 	glutMouseFunc(onMouseDown);
+
 	glutMainLoop();
 	return 0;
 }
