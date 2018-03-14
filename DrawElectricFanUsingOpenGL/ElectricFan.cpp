@@ -9,7 +9,13 @@ GLfloat angle;
 int		screenWidth = 800;
 int		screenHeight =800;
 const int circleCount = 100; //Số lượng vòng tròn trong lưới quạt
-int fanSpeed = 20;
+int fanSpeed = 0;
+float orthorScaler = 3;
+bool swing = false;
+bool displayBody = false;
+bool displayEngine = false;
+bool displayDome = false;
+bool displayFanBlade = false;
 
 int o_x, o_y;
 float eyeX, eyeY, eyeZ;
@@ -387,40 +393,44 @@ void drawDomeRear(float radius, float height, float lineWidth) {
 }
 #pragma endregion
 
+
+
 void drawFan() {
-	drawAxis();
-	glViewport(0, 0, screenWidth, screenHeight);
+	glPushMatrix();
 
 	glTranslatef(0, 1, 0);
 	glRotatef(90, 1, 0, 0);
 	glPushMatrix();
-	drawFanBody();
+	if (displayBody)
+		drawFanBody();
 	glPopMatrix();
 
 	glTranslatef(0, 1.8, -0.9);
 	glRotatef(30, 1, 0, 0);
 
-
-	if (angle <= 180)
-		glRotatef(angle*120/180 - 60, 0, 0, 1);
-	else 
-		glRotatef((360-angle)*12/18-60, 0, 0, 1);
+	if (swing) { //Nếu cho quạt quay (swing)
+		if (angle <= 180)
+			glRotatef(angle * 120 / 180 - 60, 0, 0, 1);
+		else
+			glRotatef((360 - angle) * 12 / 18 - 60, 0, 0, 1);
+	}
 
 	glTranslatef(0, 1, 0);
-	drawWholeFanBlade(); //Vẽ toàn bộ 5 cánh quạt và trục
+	if (displayFanBlade)
+		drawWholeFanBlade(); //Vẽ toàn bộ 6 cánh quạt và trục
+
 	glTranslatef(0, -0.3, 0);
-	drawEngineCover(); //Vẽ hộp động cơ
+	if (displayEngine)
+		drawEngineCover(); //Vẽ hộp động cơ
 	
-	glColor3f(0.52f, 0.52f, 0.52f);
-	drawDomeRear(2.8, 0.4, 0.1); //Vẽ phần lưới quạt phía sau
-	glTranslatef(0, 0.5, 0);
-	drawDomeFront(2.8, 0.6); //Vẽ phần lưới quạt phía trước
-
-	
+	if (displayDome) {
+		glColor3f(0.52f, 0.52f, 0.52f);
+		drawDomeRear(2.8, 0.4, 0.1); //Vẽ phần lưới quạt phía sau
+		glTranslatef(0, 0.5, 0);
+		drawDomeFront(2.8, 0.6); //Vẽ phần lưới quạt phía trước
+	}
+	glPopMatrix();
 }
-
-
-
 
 
 
@@ -440,17 +450,55 @@ void onKeyboard(unsigned char key, int x, int y) {
 	case '-':
 		fanSpeed -= 4;
 		break;
+	case 's':
+		if (swing) swing = false; 
+		else swing = true;
+		break;
+	case 'b':
+		if (displayBody) displayBody = false;
+		else displayBody = true;
+		break;
+	case 'd':
+		if (displayDome) displayDome= false;
+		else displayDome = true;
+		break;
+	case 'f':
+		if (displayFanBlade) displayFanBlade = false;
+		else displayFanBlade = true;
+		break;
+	case 'e':
+		if (displayEngine) displayEngine = false;
+		else displayEngine = true;
+		break;
+	case 'a':
+		displayBody = displayEngine = displayDome = displayFanBlade = true;
+		break;
 	default: break;
 	}
 	if (fanSpeed > 20) fanSpeed = 20;
-	if (fanSpeed < 2) fanSpeed = 2;
+	if (fanSpeed < 0) fanSpeed = 0;
+	glutPostRedisplay();
+}
+
+void onSpecialKey(int key, int x, int y) {
+	switch (key) {
+
+	case GLUT_KEY_PAGE_UP:		// Zoom in
+		orthorScaler-=0.2;
+		break;
+	case GLUT_KEY_PAGE_DOWN:	// Zoom out
+		orthorScaler += 0.2;
+	default:
+		break;
+	}
+	if (orthorScaler > 10) orthorScaler = 10;
+	if (orthorScaler < 0.5) orthorScaler = 0.5;
 	glutPostRedisplay();
 }
 
 void onReshape(int w, int h) {
 	int size = min(w, h);
 	glViewport(0, 0, size, size);
-	glOrtho(-4, 4, -4, 4, -2000, -2000);
 }
 
 void onMouseDown(int button, int state, int x, int y) {
@@ -468,48 +516,14 @@ void onMotion(int x, int y) {
 	glutPostRedisplay();
 }
 
-void onSpecialKey(int key, int x, int y) {
-	switch (key) {
-	case GLUT_KEY_UP:
-		beta -= deltaAngle;		// Object spins up
-		break;
-	case GLUT_KEY_DOWN:
-		beta += deltaAngle;		// Object spins down
-		break;
-	case GLUT_KEY_LEFT:
-		alpha -= deltaAngle;	// Object spins left
-		break;
-	case GLUT_KEY_RIGHT:
-		alpha += deltaAngle;	// Object spins right
-		break;
-	case GLUT_KEY_PAGE_UP:		// Zoom up
-		Radius -= dR;
-		break;
-	case GLUT_KEY_PAGE_DOWN:	// Zoom down
-		Radius += dR;
-	default:
-		break;
-	}
-
-	glutPostRedisplay();
-}
 #pragma endregion
 
-
-void myInit() {
-	float	fHalfSize = 4;
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-	glFrontFace(GL_CCW);
-	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-fHalfSize , fHalfSize , -fHalfSize, fHalfSize, -1000 , 1000);
-}
 
 void view() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+	glOrtho(-orthorScaler, orthorScaler, -orthorScaler, orthorScaler, -orthorScaler, orthorScaler);
 }
 
 void initOpenGL() {
@@ -526,9 +540,9 @@ void initOpenGL() {
 		10.0	//far
 	);
 	//Default MatrixMode is MODELVIEW 
-	
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_DEPTH_TEST);
+
 }
 
 void initialize() {
@@ -544,13 +558,19 @@ void initialize() {
 }
 
 void myDisplay() {
-	
 	initOpenGL();
 	initialize();
 	view();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	 
+	glClearColor(1, 1, 1, 1);
+	drawAxis();
+	glViewport(0, 0, screenWidth, screenHeight);
+
+	glRotatef(180, 0, 1, 0);
+	glTranslatef(1, 0, 1);
+	drawFan();
+	//glTranslatef(-1, 0, 2); drawFan();
 
 	drawFan();
 
@@ -569,6 +589,7 @@ int main(int argc, CHAR* argv[]) {
 	glutDisplayFunc(myDisplay);
 	glutTimerFunc(5, processTimer, 5);
 	glutKeyboardFunc(onKeyboard);
+	glutSpecialFunc(onSpecialKey);
 	glutReshapeFunc(onReshape);
 	glutMotionFunc(onMotion);
 	glutMouseFunc(onMouseDown);
